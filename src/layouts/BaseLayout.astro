@@ -1,0 +1,98 @@
+---
+import "@/styles/global.css";
+import { business } from "@/data/business";
+import { navigation } from "@/data/navigation";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import DemoWidget from "@/components/layout/DemoWidget.astro";
+import StickyMobileCTA from "@/components/layout/StickyMobileCTA.astro";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const noIndex = business.demoMode || !business.allowIndexing;
+---
+
+<!doctype html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {noIndex ? (
+      <meta name="robots" content="noindex,nofollow" />
+    ) : (
+      <>
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+      </>
+    )}
+  </head>
+  <body class:list={[business.captureMode && "capture-mode"]}>
+    <a href="#main-content" class="skip-link">Pereiti prie turinio</a>
+
+    <Header
+      businessName={business.businessName}
+      logoPath={business.logoPath}
+      logoAlt={business.logoAlt}
+      phone={business.phone}
+      primaryCta={business.primaryCta}
+      navItems={navigation}
+    />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer
+      businessName={business.businessName}
+      logoPath={business.logoPath}
+      logoAlt={business.logoAlt}
+      shortDescription={business.shortDescription}
+      phone={business.phone}
+      email={business.email}
+      address={business.address}
+      facebookUrl={business.facebookUrl}
+      demoMode={business.demoMode}
+      navItems={navigation}
+    />
+
+    {business.demoMode && <DemoWidget />}
+    <StickyMobileCTA phone={business.phone} label={business.primaryCta.label} />
+
+    <script>
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+      if (reduced || !("IntersectionObserver" in window)) {
+        items.forEach((el) => el.classList.add("is-visible"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+        );
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

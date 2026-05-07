@@ -1,0 +1,138 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+
+interface FeatureItem {
+  title: string;
+  description: string;
+  icon?: string;
+  meta?: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  dimLine?: string;
+  subheading?: string;
+  items: FeatureItem[];
+  columns?: 2 | 3 | 4;
+  cardStyle?: "plain" | "bordered" | "elevated";
+}
+
+const {
+  eyebrow,
+  heading,
+  dimLine,
+  subheading,
+  items,
+  columns = 3,
+  cardStyle = "bordered",
+} = Astro.props;
+---
+
+<div class="feature-grid">
+  {heading && (
+    <SectionHeading
+      eyebrow={eyebrow}
+      heading={heading}
+      dimLine={dimLine}
+      subheading={subheading}
+    />
+  )}
+
+  <ul
+    class={`feature-grid__list feature-grid__list--cols-${columns} feature-grid__list--${cardStyle}`}
+  >
+    {items.map((item, i) => (
+      <li class="feature-grid__item" data-reveal style={`--reveal-delay: ${i * 80}ms`}>
+        {item.icon && (
+          <span class="feature-grid__icon" aria-hidden="true">{item.icon}</span>
+        )}
+        <h3 class="feature-grid__title">{item.title}</h3>
+        {item.meta && <p class="feature-grid__meta">{item.meta}</p>}
+        <p class="feature-grid__desc">{item.description}</p>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .feature-grid__list {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 600px) {
+    .feature-grid__list--cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid__list--cols-3 { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid__list--cols-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .feature-grid__list--cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid__list--cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .feature-grid__list--cols-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .feature-grid__item {
+    padding: clamp(1.75rem, 2.6vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-white);
+    transition:
+      transform var(--motion-duration-base) var(--motion-ease),
+      border-color var(--motion-duration-base) var(--motion-ease),
+      box-shadow var(--motion-duration-base) var(--motion-ease);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-grid__list--plain .feature-grid__item {
+    background: transparent;
+    padding: var(--spacing-md) 0;
+  }
+  .feature-grid__list--bordered .feature-grid__item {
+    border: 1px solid var(--color-border);
+  }
+  .feature-grid__list--bordered .feature-grid__item:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+  }
+  .feature-grid__list--elevated .feature-grid__item {
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+  }
+  .feature-grid__list--elevated .feature-grid__item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .feature-grid__icon {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-info-bg);
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-lg);
+  }
+  .feature-grid__title {
+    font-size: var(--font-size-xl);
+    line-height: 1.25;
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+  }
+  .feature-grid__meta {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-sm);
+  }
+  .feature-grid__desc {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+  }
+</style>

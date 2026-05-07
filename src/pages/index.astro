@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { business } from "@/data/business";
+import { homePage } from "@/data/pages/home";
+
+import Hero from "@/components/sections/Hero.astro";
+import FeatureGrid from "@/components/sections/FeatureGrid.astro";
+import SplitContent from "@/components/sections/SplitContent.astro";
+import CTASection from "@/components/sections/CTASection.astro";
+import ContactBlock from "@/components/sections/ContactBlock.astro";
+import Section from "@/components/ui/Section.astro";
+---
+
+<BaseLayout title={homePage.seo.title} description={homePage.seo.description}>
+  <Hero
+    eyebrow={homePage.hero.eyebrow}
+    headline={homePage.hero.headline}
+    subheadline={homePage.hero.subheadline}
+    primaryCta={homePage.hero.primaryCta}
+    phone={business.phone}
+    phoneLabel={homePage.hero.phoneLabel}
+    trustPoints={homePage.trustPoints}
+    imagePlaceholderLabel={homePage.hero.imagePlaceholderLabel}
+  />
+
+  <Section bg="alt">
+    <FeatureGrid
+      eyebrow={homePage.servicesPreview.eyebrow}
+      heading={homePage.servicesPreview.heading}
+      dimLine={homePage.servicesPreview.dimLine}
+      subheading={homePage.servicesPreview.subheading}
+      items={homePage.servicesPreview.items}
+      columns={3}
+      cardStyle="bordered"
+    />
+  </Section>
+
+  <Section>
+    <SplitContent
+      heading={homePage.splitContent.heading}
+      body={homePage.splitContent.body}
+      imagePlaceholderLabel={homePage.splitContent.imagePlaceholderLabel}
+      imageOnRight={homePage.splitContent.imageOnRight}
+    />
+  </Section>
+
+  <CTASection
+    heading={homePage.cta.heading}
+    dimLine={homePage.cta.dimLine}
+    subtext={homePage.cta.subtext}
+    primaryCta={homePage.cta.primaryCta}
+  />
+
+  <Section>
+    <ContactBlock
+      phone={business.phone}
+      email={business.email}
+      address={business.address}
+      mapsUrl={business.mapsUrl}
+      facebookUrl={business.facebookUrl}
+      compact={true}
+      eyebrow="Kontaktai"
+      heading="Susisiekime"
+    />
+  </Section>
+</BaseLayout>

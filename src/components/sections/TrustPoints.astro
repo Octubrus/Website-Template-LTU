@@ -1,0 +1,87 @@
+---
+import type { TrustPoint } from "@/data/pages/home";
+
+interface Props {
+  heading?: string;
+  items: TrustPoint[];
+}
+
+const { heading, items } = Astro.props;
+---
+
+<div class="trust-points">
+  {heading && <h2 class="trust-points__heading">{heading}</h2>}
+  <ul class="trust-points__list">
+    {items.map((item) => (
+      <li class="trust-points__item">
+        {item.icon && (
+          <span class="trust-points__icon" aria-hidden="true">{item.icon}</span>
+        )}
+        <span class="trust-points__text">{item.text}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .trust-points {
+    text-align: center;
+  }
+  .trust-points__heading {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-xl);
+  }
+  .trust-points__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+    text-align: left;
+  }
+  @media (min-width: 600px) {
+    .trust-points__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+    }
+  }
+  @media (min-width: 900px) {
+    .trust-points__list {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+    }
+  }
+  .trust-points__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--motion-duration-base) var(--motion-ease),
+      box-shadow var(--motion-duration-base) var(--motion-ease);
+  }
+  .trust-points__item:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+  .trust-points__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-pill);
+    font-size: 1rem;
+    color: var(--color-primary);
+    background-color: var(--color-info-bg);
+    line-height: 1;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .trust-points__text {
+    font-size: var(--font-size-base);
+    line-height: 1.45;
+    font-weight: 500;
+  }
+</style>

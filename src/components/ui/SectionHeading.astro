@@ -1,0 +1,109 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  /**
+   * Optional dimmed second line — same size as the main heading,
+   * rendered with reduced opacity. Used selectively to add visual
+   * hierarchy without a second colour.
+   */
+  dimLine?: string;
+  subheading?: string;
+  align?: "center" | "start";
+  tone?: "default" | "inverse";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  heading,
+  dimLine,
+  subheading,
+  align = "center",
+  tone = "default",
+  class: className = "",
+} = Astro.props;
+
+const classes = [
+  "section-heading",
+  `section-heading--${align}`,
+  `section-heading--${tone}`,
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<header class={classes} data-reveal>
+  {eyebrow && <span class="section-heading__eyebrow">{eyebrow}</span>}
+  <h2 class="section-heading__title">
+    <span class="section-heading__line">{heading}</span>
+    {dimLine && (
+      <>
+        {" "}
+        <span class="section-heading__line section-heading__line--dim">
+          {dimLine}
+        </span>
+      </>
+    )}
+  </h2>
+  {subheading && <p class="section-heading__sub">{subheading}</p>}
+</header>
+
+<style>
+  .section-heading {
+    max-width: 760px;
+    margin-inline: auto;
+    margin-bottom: var(--spacing-2xl);
+  }
+  .section-heading--center { text-align: center; }
+  .section-heading--start { text-align: left; margin-inline: 0; }
+
+  .section-heading__eyebrow {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--spacing-md);
+  }
+  .section-heading--inverse .section-heading__eyebrow {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .section-heading__title {
+    font-size: clamp(2rem, 4.4vw, var(--font-size-4xl));
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-tighter);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .section-heading--inverse .section-heading__title {
+    color: var(--color-text-inverse);
+  }
+
+  .section-heading__line { display: inline; }
+  .section-heading__line--dim {
+    color: var(--color-text-dim);
+  }
+  .section-heading--inverse .section-heading__line--dim {
+    color: var(--color-text-dim-on-dark);
+  }
+
+  .section-heading__sub {
+    font-size: var(--font-size-md);
+    color: var(--color-text-muted);
+    line-height: 1.55;
+    margin-top: var(--spacing-md);
+    max-width: 60ch;
+  }
+  .section-heading--center .section-heading__sub {
+    margin-inline: auto;
+  }
+  .section-heading--inverse .section-heading__sub {
+    color: rgba(255, 255, 255, 0.7);
+  }
+</style>

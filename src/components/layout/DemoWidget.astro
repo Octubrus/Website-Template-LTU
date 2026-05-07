@@ -1,0 +1,163 @@
+---
+import { agency } from "@/data/agency";
+
+const ksMark = agency.name
+  .split(/\s+/)
+  .map((word) => word.charAt(0))
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+---
+
+<a
+  class="demo-widget"
+  href={agency.website}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`${agency.ctaLabel} su ${agency.name}`}
+>
+  <span class="demo-widget__top">
+    <span class="demo-widget__mark" aria-hidden="true">{ksMark}</span>
+    <span class="demo-widget__label">Demo versija</span>
+  </span>
+  <span class="demo-widget__title">
+    Paruošė <strong>{agency.name}</strong>
+  </span>
+  <span class="demo-widget__cta">
+    {agency.ctaLabel} <span aria-hidden="true">→</span>
+  </span>
+</a>
+
+<style>
+  .demo-widget {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0.85rem 1.05rem;
+    max-width: 280px;
+    background-color: var(--ks-navy);
+    color: var(--ks-white);
+    border: 1px solid rgba(201, 151, 85, 0.35);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 18px 50px rgba(7, 17, 31, 0.28);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      transform var(--motion-duration-base) var(--motion-ease),
+      box-shadow var(--motion-duration-base) var(--motion-ease),
+      border-color var(--motion-duration-base) var(--motion-ease),
+      background-color var(--motion-duration-base) var(--motion-ease);
+  }
+  .demo-widget:hover {
+    transform: translateY(-2px);
+    background-color: var(--ks-navy-soft);
+    border-color: rgba(201, 151, 85, 0.7);
+    box-shadow: 0 22px 60px rgba(7, 17, 31, 0.4);
+    text-decoration: none;
+  }
+  .demo-widget:active {
+    transform: translateY(-1px);
+  }
+  .demo-widget:focus-visible {
+    outline: 2px solid var(--ks-gold);
+    outline-offset: 3px;
+  }
+  /* Hide entirely in capture mode — clean prospect-facing screenshots */
+  :global(body.capture-mode) .demo-widget {
+    display: none;
+  }
+
+  .demo-widget__top {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .demo-widget__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    background-color: var(--ks-gold);
+    color: var(--ks-navy);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .demo-widget__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ks-muted);
+  }
+
+  .demo-widget__title {
+    font-size: var(--font-size-sm);
+    color: var(--ks-cream);
+    line-height: 1.4;
+  }
+  .demo-widget__title strong {
+    color: var(--ks-white);
+    font-weight: 700;
+  }
+
+  .demo-widget__cta {
+    font-size: var(--font-size-sm);
+    color: var(--ks-gold);
+    font-weight: 600;
+    margin-top: 2px;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .demo-widget:hover .demo-widget__cta {
+    color: var(--ks-gold-hover);
+  }
+
+  /* Mobile: compact pill above StickyMobileCTA — keep agency presence subtle */
+  @media (max-width: 767px) {
+    .demo-widget {
+      bottom: calc(var(--mobile-cta-height) + var(--spacing-sm));
+      right: var(--spacing-md);
+      max-width: none;
+      padding: 0.45rem 0.85rem;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-sm);
+      border-radius: var(--radius-pill);
+    }
+    .demo-widget__title { display: none; }
+    .demo-widget__label { font-size: 0.65rem; }
+    .demo-widget__mark { width: 22px; height: 22px; font-size: 0.65rem; }
+    .demo-widget__cta { margin-top: 0; }
+  }
+
+  /* Very small screens: hide widget — footer credit carries the brand */
+  @media (max-width: 359px) {
+    .demo-widget { display: none; }
+  }
+
+  /* Subtle on-load reveal */
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-widget {
+      animation: demo-widget-in 0.45s var(--motion-ease) 0.5s both;
+    }
+  }
+  @keyframes demo-widget-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

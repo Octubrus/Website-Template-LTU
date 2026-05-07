@@ -1,0 +1,57 @@
+---
+interface Props {
+  businessName: string;
+  logoPath: string | null;
+  logoAlt: string;
+  href?: string;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const {
+  businessName,
+  logoPath,
+  logoAlt,
+  href = "/",
+  size = "md",
+  class: className = "",
+} = Astro.props;
+
+const classes = ["logo", `logo--${size}`, className].filter(Boolean).join(" ");
+const altText = logoAlt && logoAlt.trim().length > 0 ? logoAlt : `${businessName} logotipas`;
+---
+
+<a href={href} class={classes} aria-label={`${businessName} — pradžios puslapis`}>
+  {logoPath ? (
+    <img src={logoPath} alt={altText} class="logo__img" />
+  ) : (
+    <span class="logo__text">{businessName}</span>
+  )}
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .logo:hover { text-decoration: none; }
+
+  .logo__img {
+    display: block;
+    width: auto;
+  }
+  .logo--sm .logo__img { height: 28px; }
+  .logo--md .logo__img { height: 36px; }
+  .logo--lg .logo__img { height: 48px; }
+
+  .logo__text {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+  .logo--sm .logo__text { font-size: var(--font-size-base); }
+  .logo--md .logo__text { font-size: var(--font-size-lg); }
+  .logo--lg .logo__text { font-size: var(--font-size-xl); }
+</style>

@@ -1,0 +1,78 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { business } from "@/data/business";
+import { contactPage } from "@/data/pages/contact";
+
+import PageHeader from "@/components/ui/PageHeader.astro";
+import Section from "@/components/ui/Section.astro";
+import ContactBlock from "@/components/sections/ContactBlock.astro";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder.astro";
+import ContactForm from "@/components/ui/ContactForm.astro";
+import CTASection from "@/components/sections/CTASection.astro";
+---
+
+<BaseLayout
+  title={contactPage.seo.title}
+  description={contactPage.seo.description}
+>
+  <PageHeader
+    eyebrow={contactPage.pageHeader.eyebrow}
+    heading={contactPage.pageHeader.heading}
+    dimLine={contactPage.pageHeader.dimLine}
+    subheading={contactPage.pageHeader.subheading}
+  />
+
+  <Section>
+    <ContactBlock
+      phone={business.phone}
+      email={business.email}
+      address={business.address}
+      mapsUrl={business.mapsUrl}
+      facebookUrl={business.facebookUrl}
+      openingHours={business.openingHours}
+    />
+  </Section>
+
+  <Section bg="alt">
+    <div class="map-wrap">
+      <ImagePlaceholder
+        label={contactPage.mapPlaceholderLabel}
+        aspectRatio="16/9"
+      />
+    </div>
+  </Section>
+
+  {business.contactFormEnabled && (
+    <Section>
+      <ContactForm
+        demoMode={business.demoMode}
+        contactFormEnabled={business.contactFormEnabled}
+        heading={contactPage.form.heading}
+        subtext={contactPage.form.subtext}
+        demoNotice={contactPage.form.demoNotice}
+        successMessage={contactPage.form.successMessage}
+      />
+    </Section>
+  )}
+
+  <CTASection
+    heading={contactPage.cta.heading}
+    dimLine={contactPage.cta.dimLine}
+    subtext={contactPage.cta.subtext}
+    primaryCta={contactPage.cta.primaryCta}
+  />
+</BaseLayout>
+
+<style>
+  .map-wrap {
+    max-width: 880px;
+    margin-inline: auto;
+    /* Cap the placeholder height so 16/9 doesn't dominate the page.
+       When a real iframe/image replaces ImagePlaceholder, this still
+       behaves naturally. */
+    max-height: 460px;
+  }
+  .map-wrap :global(.image-placeholder) {
+    max-height: 460px;
+  }
+</style>

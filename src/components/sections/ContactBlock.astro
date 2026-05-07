@@ -1,0 +1,235 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import type { OpeningHours } from "@/data/business";
+
+interface Props {
+  phone: string;
+  email: string;
+  address: string;
+  mapsUrl?: string;
+  facebookUrl?: string;
+  openingHours?: OpeningHours[];
+  compact?: boolean;
+  heading?: string;
+  dimLine?: string;
+  eyebrow?: string;
+  subheading?: string;
+}
+
+const {
+  phone,
+  email,
+  address,
+  mapsUrl,
+  facebookUrl,
+  openingHours,
+  compact = false,
+  heading,
+  dimLine,
+  eyebrow,
+  subheading,
+} = Astro.props;
+
+const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
+---
+
+<div class={`contact-block ${compact ? "contact-block--compact" : ""}`}>
+  {heading && (
+    <SectionHeading
+      eyebrow={eyebrow}
+      heading={heading}
+      dimLine={dimLine}
+      subheading={subheading}
+    />
+  )}
+
+  <div class="contact-block__layout">
+    <ul class="contact-block__cards">
+      <li class="contact-block__card" data-reveal style="--reveal-delay: 0ms">
+        <span class="contact-block__icon" aria-hidden="true">📞</span>
+        <span class="contact-block__label">Telefonas</span>
+        <a class="contact-block__value contact-block__value--link" href={telHref}>
+          {phone}
+        </a>
+      </li>
+
+      <li class="contact-block__card" data-reveal style="--reveal-delay: 80ms">
+        <span class="contact-block__icon" aria-hidden="true">✉</span>
+        <span class="contact-block__label">El. paštas</span>
+        <a
+          class="contact-block__value contact-block__value--link"
+          href={`mailto:${email}`}
+        >
+          {email}
+        </a>
+      </li>
+
+      <li class="contact-block__card" data-reveal style="--reveal-delay: 160ms">
+        <span class="contact-block__icon" aria-hidden="true">📍</span>
+        <span class="contact-block__label">Adresas</span>
+        {mapsUrl ? (
+          <a
+            class="contact-block__value contact-block__value--link"
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {address}
+          </a>
+        ) : (
+          <span class="contact-block__value">{address}</span>
+        )}
+      </li>
+
+      {facebookUrl && (
+        <li class="contact-block__card" data-reveal style="--reveal-delay: 240ms">
+          <span class="contact-block__icon" aria-hidden="true">f</span>
+          <span class="contact-block__label">Facebook</span>
+          <a
+            class="contact-block__value contact-block__value--link"
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Sekti puslapį
+          </a>
+        </li>
+      )}
+    </ul>
+
+    {!compact && openingHours && openingHours.length > 0 && (
+      <div class="contact-block__hours" data-reveal style="--reveal-delay: 100ms">
+        <h3 class="contact-block__hours-heading">Darbo laikas</h3>
+        <dl class="contact-block__hours-list">
+          {openingHours.map((row) => (
+            <div class="contact-block__hours-row">
+              <dt>{row.day}</dt>
+              <dd>{row.hours}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .contact-block {
+    max-width: 1040px;
+    margin-inline: auto;
+  }
+
+  .contact-block__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+  @media (min-width: 900px) {
+    .contact-block__layout {
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--spacing-2xl);
+      align-items: start;
+    }
+  }
+  .contact-block--compact .contact-block__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-block__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  @media (min-width: 600px) {
+    .contact-block__cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .contact-block--compact .contact-block__cards {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 600px) {
+    .contact-block--compact .contact-block__cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .contact-block--compact .contact-block__cards {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .contact-block__card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--spacing-lg) var(--spacing-lg);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.15s ease;
+  }
+  .contact-block__card:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  .contact-block__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-info-bg);
+    color: var(--color-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .contact-block__label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .contact-block__value {
+    font-size: var(--font-size-md);
+    color: var(--color-text);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .contact-block__value--link {
+    color: var(--color-primary);
+  }
+  .contact-block__value--link:hover {
+    text-decoration: underline;
+  }
+
+  .contact-block__hours {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+  }
+  .contact-block__hours-heading {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .contact-block__hours-list {
+    display: grid;
+    gap: var(--spacing-sm);
+  }
+  .contact-block__hours-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+  }
+  .contact-block__hours-row dt { color: var(--color-text); }
+  .contact-block__hours-row dd { color: var(--color-text-muted); font-weight: 600; }
+</style>

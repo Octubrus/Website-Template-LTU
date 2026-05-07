@@ -1,0 +1,57 @@
+---
+import Container from "./Container.astro";
+
+interface Props {
+  id?: string;
+  class?: string;
+  bg?: "default" | "alt" | "dark" | "primary";
+  contained?: boolean;
+}
+
+const {
+  id,
+  class: className = "",
+  bg = "default",
+  contained = true,
+} = Astro.props;
+
+const classes = ["section", `section--${bg}`, className]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section id={id} class={classes}>
+  {contained ? (
+    <Container>
+      <slot />
+    </Container>
+  ) : (
+    <slot />
+  )}
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-padding-y);
+  }
+  .section--default { background-color: var(--color-bg); }
+  .section--alt { background-color: var(--color-bg-alt); }
+  .section--dark {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-inverse);
+  }
+  .section--dark :global(h1),
+  .section--dark :global(h2),
+  .section--dark :global(h3) {
+    color: var(--color-text-inverse);
+  }
+  .section--primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+  }
+  .section--primary :global(h1),
+  .section--primary :global(h2),
+  .section--primary :global(h3) {
+    color: var(--color-primary-contrast);
+  }
+</style>

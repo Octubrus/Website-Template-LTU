@@ -1,0 +1,69 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { servicesPage } from "@/data/pages/services";
+
+import PageHeader from "@/components/ui/PageHeader.astro";
+import Section from "@/components/ui/Section.astro";
+import FeatureGrid from "@/components/sections/FeatureGrid.astro";
+import FAQ from "@/components/sections/FAQ.astro";
+import CTASection from "@/components/sections/CTASection.astro";
+
+const pricingItems = servicesPage.pricing.cards.map((c) => ({
+  title: c.title,
+  description: c.description,
+  meta: c.price,
+}));
+---
+
+<BaseLayout
+  title={servicesPage.seo.title}
+  description={servicesPage.seo.description}
+>
+  <PageHeader
+    eyebrow={servicesPage.pageHeader.eyebrow}
+    heading={servicesPage.pageHeader.heading}
+    dimLine={servicesPage.pageHeader.dimLine}
+    subheading={servicesPage.pageHeader.subheading}
+  />
+
+  <Section>
+    <FeatureGrid
+      eyebrow={servicesPage.services.eyebrow}
+      heading={servicesPage.services.heading}
+      dimLine={servicesPage.services.dimLine}
+      items={servicesPage.services.items}
+      columns={2}
+      cardStyle="bordered"
+    />
+  </Section>
+
+  {servicesPage.pricing.enabled && (
+    <Section bg="alt">
+      <FeatureGrid
+        eyebrow={servicesPage.pricing.eyebrow}
+        heading={servicesPage.pricing.heading}
+        dimLine={servicesPage.pricing.dimLine}
+        subheading={servicesPage.pricing.subheading}
+        items={pricingItems}
+        columns={3}
+        cardStyle="elevated"
+      />
+    </Section>
+  )}
+
+  <Section>
+    <FAQ
+      eyebrow={servicesPage.faq.eyebrow}
+      heading={servicesPage.faq.heading}
+      dimLine={servicesPage.faq.dimLine}
+      items={servicesPage.faq.items}
+    />
+  </Section>
+
+  <CTASection
+    heading={servicesPage.cta.heading}
+    dimLine={servicesPage.cta.dimLine}
+    subtext={servicesPage.cta.subtext}
+    primaryCta={servicesPage.cta.primaryCta}
+  />
+</BaseLayout>

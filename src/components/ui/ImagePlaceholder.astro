@@ -1,0 +1,68 @@
+---
+interface Props {
+  label?: string;
+  aspectRatio?: string;
+  class?: string;
+}
+
+const {
+  label = "Įkelkite realią verslo, komandos arba patalpų nuotrauką.",
+  aspectRatio = "4/3",
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class={`image-placeholder ${className}`}
+  style={`aspect-ratio: ${aspectRatio};`}
+  role="img"
+  aria-label={label}
+>
+  <div class="image-placeholder__inner">
+    <span class="image-placeholder__title">Nuotraukos vieta</span>
+    <span class="image-placeholder__hint">{label}</span>
+  </div>
+</div>
+
+<style>
+  .image-placeholder {
+    width: 100%;
+    background:
+      linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    overflow: hidden;
+    position: relative;
+  }
+  .image-placeholder::before {
+    content: "";
+    position: absolute;
+    inset: var(--spacing-md);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: calc(var(--radius-lg) - var(--spacing-sm));
+    pointer-events: none;
+    opacity: 0.55;
+  }
+  .image-placeholder__inner {
+    text-align: center;
+    max-width: 360px;
+    color: var(--color-text-muted);
+    position: relative;
+  }
+  .image-placeholder__title {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-xs);
+  }
+  .image-placeholder__hint {
+    display: block;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-snug);
+  }
+</style>

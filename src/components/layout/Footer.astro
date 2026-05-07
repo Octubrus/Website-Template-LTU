@@ -1,0 +1,272 @@
+---
+import Logo from "@/components/ui/Logo.astro";
+import Container from "@/components/ui/Container.astro";
+import { agency } from "@/data/agency";
+import type { NavItem } from "@/data/navigation";
+
+interface Props {
+  businessName: string;
+  logoPath: string | null;
+  logoAlt: string;
+  shortDescription: string;
+  phone: string;
+  email: string;
+  address: string;
+  facebookUrl?: string;
+  demoMode: boolean;
+  navItems: NavItem[];
+}
+
+const {
+  businessName,
+  logoPath,
+  logoAlt,
+  shortDescription,
+  phone,
+  email,
+  address,
+  facebookUrl,
+  demoMode,
+  navItems,
+} = Astro.props;
+
+const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
+const year = new Date().getFullYear();
+const agencyHostname = agency.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
+const ksMark = agency.name
+  .split(/\s+/)
+  .map((word) => word.charAt(0))
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+---
+
+<footer class="site-footer">
+  <Container>
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <Logo
+          businessName={businessName}
+          logoPath={logoPath}
+          logoAlt={logoAlt}
+          size="md"
+        />
+        <p class="site-footer__desc">{shortDescription}</p>
+      </div>
+
+      <nav class="site-footer__nav" aria-label="Apatinis meniu">
+        <h3 class="site-footer__heading">Naršymas</h3>
+        <ul>
+          {navItems.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="site-footer__contact">
+        <h3 class="site-footer__heading">Kontaktai</h3>
+        <ul>
+          {phone && (
+            <li>
+              <a href={telHref}>{phone}</a>
+            </li>
+          )}
+          {email && (
+            <li>
+              <a href={`mailto:${email}`}>{email}</a>
+            </li>
+          )}
+          {address && <li>{address}</li>}
+          {facebookUrl && (
+            <li>
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
+                Facebook
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
+    </div>
+
+    {demoMode && (
+      <aside
+        class="footer-demo-credit"
+        data-reveal="fade"
+        aria-label={`Demonstracinę svetainę paruošė ${agency.name}`}
+      >
+        <span class="footer-demo-credit__badge" aria-hidden="true">{ksMark}</span>
+        <div class="footer-demo-credit__content">
+          <p class="footer-demo-credit__lead">
+            Demonstracinę svetainę paruošė
+            <a
+              href={agency.website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >{agency.name}</a>.
+          </p>
+          <p class="footer-demo-credit__desc">{agency.description}</p>
+        </div>
+        <a
+          class="footer-demo-credit__link"
+          href={agency.website}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {agencyHostname} <span aria-hidden="true">→</span>
+        </a>
+      </aside>
+    )}
+
+    <div class="site-footer__bottom">
+      <p>© {year} {businessName}. Visos teisės saugomos.</p>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-bg-alt);
+    color: var(--color-text);
+    padding-block: var(--spacing-2xl) var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--font-size-base);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--spacing-xl);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: var(--spacing-2xl);
+    }
+  }
+
+  .site-footer__desc {
+    margin-top: var(--spacing-md);
+    color: var(--color-text-muted);
+    max-width: 42ch;
+    line-height: 1.6;
+  }
+
+  .site-footer__heading {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .site-footer ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    line-height: 1.5;
+  }
+  .site-footer ul a,
+  .site-footer ul li {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+  }
+  .site-footer ul a:hover { color: var(--color-primary); }
+
+  /* ─────────────────────────────────────────────────────────────────
+     Klientų Sistema demo credit — branded card
+     Uses --ks-* tokens. Distinct from the rest of the (neutral) footer.
+     ───────────────────────────────────────────────────────────────── */
+  .footer-demo-credit {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background-color: var(--ks-navy);
+    color: var(--ks-cream);
+    border: 1px solid rgba(201, 151, 85, 0.25);
+    border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-md) var(--spacing-lg);
+    align-items: start;
+    font-size: var(--font-size-base);
+    line-height: 1.55;
+  }
+  @media (min-width: 768px) {
+    .footer-demo-credit {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: var(--spacing-lg) var(--spacing-xl);
+      gap: var(--spacing-xl);
+    }
+  }
+
+  .footer-demo-credit__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background-color: var(--ks-gold);
+    color: var(--ks-navy);
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .footer-demo-credit__content {
+    grid-column: 2;
+    color: var(--ks-cream);
+  }
+  @media (min-width: 768px) {
+    .footer-demo-credit__content { grid-column: auto; }
+  }
+  .footer-demo-credit__lead {
+    color: var(--ks-white);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .footer-demo-credit__lead a {
+    color: var(--ks-gold);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .footer-demo-credit__lead a:hover {
+    color: var(--ks-gold-hover);
+    text-decoration: underline;
+  }
+  .footer-demo-credit__desc {
+    color: var(--ks-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.55;
+    max-width: 60ch;
+  }
+
+  .footer-demo-credit__link {
+    grid-column: 1 / -1;
+    color: var(--ks-gold);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  @media (min-width: 768px) {
+    .footer-demo-credit__link { grid-column: auto; }
+  }
+  .footer-demo-credit__link:hover {
+    color: var(--ks-gold-hover);
+    text-decoration: underline;
+  }
+
+  .site-footer__bottom {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+</style>

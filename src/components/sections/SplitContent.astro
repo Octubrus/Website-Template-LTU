@@ -1,0 +1,87 @@
+---
+import Button from "@/components/ui/Button.astro";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder.astro";
+
+interface Props {
+  heading: string;
+  body: string;
+  imagePath?: string | null;
+  imageAlt?: string;
+  imagePlaceholderLabel?: string;
+  imageOnRight?: boolean;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  heading,
+  body,
+  imagePath = null,
+  imageAlt = "",
+  imagePlaceholderLabel,
+  imageOnRight = true,
+  ctaLabel,
+  ctaHref,
+} = Astro.props;
+---
+
+<div class={`split ${imageOnRight ? "split--image-right" : "split--image-left"}`}>
+  <div class="split__text" data-reveal>
+    <h2 class="split__heading">{heading}</h2>
+    <p class="split__body">{body}</p>
+    {ctaLabel && ctaHref && (
+      <div class="split__action">
+        <Button href={ctaHref} variant="secondary">{ctaLabel}</Button>
+      </div>
+    )}
+  </div>
+  <div class="split__visual" data-reveal="scale" style="--reveal-delay: 100ms">
+    {imagePath ? (
+      <img src={imagePath} alt={imageAlt} class="split__image" />
+    ) : (
+      <ImagePlaceholder label={imagePlaceholderLabel} aspectRatio="4/3" />
+    )}
+  </div>
+</div>
+
+<style>
+  .split {
+    display: grid;
+    gap: var(--spacing-2xl);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-3xl);
+    }
+    .split--image-right .split__text { order: 1; }
+    .split--image-right .split__visual { order: 2; }
+    .split--image-left .split__text { order: 2; }
+    .split--image-left .split__visual { order: 1; }
+  }
+
+  .split__heading {
+    font-size: clamp(1.875rem, 3.6vw, var(--font-size-3xl));
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-tighter);
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    text-wrap: balance;
+  }
+  .split__body {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-md);
+    line-height: 1.65;
+    max-width: 52ch;
+  }
+  .split__action {
+    margin-top: var(--spacing-xl);
+  }
+  .split__image {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+</style>

@@ -1,0 +1,112 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import type { FaqItem } from "@/data/pages/services";
+
+interface Props {
+  heading?: string;
+  eyebrow?: string;
+  dimLine?: string;
+  subheading?: string;
+  items: FaqItem[];
+}
+
+const { heading, eyebrow, dimLine, subheading, items } = Astro.props;
+---
+
+<div class="faq">
+  {heading && (
+    <SectionHeading
+      eyebrow={eyebrow}
+      heading={heading}
+      dimLine={dimLine}
+      subheading={subheading}
+    />
+  )}
+  <div class="faq__list">
+    {items.map((item, i) => (
+      <details class="faq__item" data-reveal style={`--reveal-delay: ${i * 70}ms`}>
+        <summary class="faq__question">
+          <span>{item.question}</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq__answer">
+          <p>{item.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</div>
+
+<style>
+  .faq {
+    max-width: 800px;
+    margin-inline: auto;
+  }
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  .faq__item {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .faq__item[open] {
+    border-color: var(--color-border-strong);
+  }
+  .faq__question {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--spacing-lg) var(--spacing-lg);
+    font-weight: 600;
+    font-size: var(--font-size-md);
+    color: var(--color-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    line-height: 1.4;
+  }
+  .faq__question::-webkit-details-marker { display: none; }
+  .faq__icon {
+    width: 14px;
+    height: 14px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: "";
+    position: absolute;
+    background-color: var(--color-primary);
+    border-radius: 1px;
+    transition: transform 0.2s ease;
+  }
+  .faq__icon::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-50%);
+  }
+  .faq__icon::after {
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    transform: translateX(-50%);
+  }
+  .faq__item[open] .faq__icon::after {
+    transform: translateX(-50%) scaleY(0);
+  }
+
+  .faq__answer {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+    line-height: 1.65;
+  }
+</style>
