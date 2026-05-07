@@ -1,5 +1,6 @@
 ---
 import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Icon from "@/components/ui/Icon.astro";
 import type { OpeningHours } from "@/data/business";
 
 interface Props {
@@ -34,17 +35,17 @@ const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
 const hasContactCards = Boolean(phone || email || address || facebookUrl);
 
 const cardClasses =
-  "flex flex-col gap-1.5 p-5 md:p-6 rounded-2xl bg-white border border-[rgb(var(--color-border))] transition-colors hover:border-[rgb(var(--color-border-strong))]";
-const iconClasses =
-  "inline-flex items-center justify-center w-10 h-10 mb-1 rounded-full bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-accent))] text-base font-bold leading-none";
+  "flex flex-col gap-2 p-6 md:p-7 rounded-2xl bg-white border border-[rgb(var(--color-border))] transition-[border-color,transform] motion-safe:hover:-translate-y-0.5 hover:border-[rgb(var(--color-border-strong))]";
+const iconBadge =
+  "inline-flex items-center justify-center w-11 h-11 mb-2 rounded-xl bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-accent))]";
 const labelClasses =
-  "text-xs font-semibold uppercase tracking-[0.05em] text-[rgb(var(--color-muted))]";
+  "text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--color-muted))]";
 const valueClasses =
-  "text-lg font-semibold leading-snug text-[rgb(var(--color-accent))] hover:underline";
+  "text-xl font-bold leading-snug tracking-[-0.01em] text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-dark))] hover:underline";
 
 const layoutClasses = compact
   ? "grid grid-cols-1 gap-6"
-  : "grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 lg:gap-12 items-start";
+  : "grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-10 items-start";
 
 const cardsGridClasses = compact
   ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
@@ -66,7 +67,7 @@ const cardsGridClasses = compact
       <ul class={cardsGridClasses}>
         {phone && (
           <li class={cardClasses} data-reveal style="--reveal-delay: 0ms">
-            <span class={iconClasses} aria-hidden="true">📞</span>
+            <span class={iconBadge}><Icon name="phone" size={20} strokeWidth={1.9} /></span>
             <span class={labelClasses}>Telefonas</span>
             <a class={valueClasses} href={telHref}>{phone}</a>
           </li>
@@ -74,7 +75,7 @@ const cardsGridClasses = compact
 
         {email && (
           <li class={cardClasses} data-reveal style="--reveal-delay: 80ms">
-            <span class={iconClasses} aria-hidden="true">✉</span>
+            <span class={iconBadge}><Icon name="mail" size={20} strokeWidth={1.9} /></span>
             <span class={labelClasses}>El. paštas</span>
             <a class={valueClasses} href={`mailto:${email}`}>{email}</a>
           </li>
@@ -82,7 +83,7 @@ const cardsGridClasses = compact
 
         {address && (
           <li class={cardClasses} data-reveal style="--reveal-delay: 160ms">
-            <span class={iconClasses} aria-hidden="true">📍</span>
+            <span class={iconBadge}><Icon name="map-pin" size={20} strokeWidth={1.9} /></span>
             <span class={labelClasses}>Adresas</span>
             {mapsUrl ? (
               <a
@@ -94,7 +95,7 @@ const cardsGridClasses = compact
                 {address}
               </a>
             ) : (
-              <span class="text-lg font-semibold leading-snug text-[rgb(var(--color-text))]">
+              <span class="text-xl font-bold leading-snug tracking-[-0.01em] text-[rgb(var(--color-text))]">
                 {address}
               </span>
             )}
@@ -103,7 +104,7 @@ const cardsGridClasses = compact
 
         {facebookUrl && (
           <li class={cardClasses} data-reveal style="--reveal-delay: 240ms">
-            <span class={iconClasses} aria-hidden="true">f</span>
+            <span class={iconBadge}><Icon name="facebook" size={20} strokeWidth={1.9} /></span>
             <span class={labelClasses}>Facebook</span>
             <a
               class={valueClasses}
@@ -120,18 +121,18 @@ const cardsGridClasses = compact
 
     {!compact && openingHours && openingHours.length > 0 && (
       <div
-        class="rounded-2xl bg-white border border-[rgb(var(--color-border))] p-6"
+        class="rounded-2xl bg-white border border-[rgb(var(--color-border))] p-6 md:p-7"
         data-reveal
         style="--reveal-delay: 100ms"
       >
-        <h3 class="mb-4 pb-3 border-b border-[rgb(var(--color-border))] text-base font-bold tracking-tight">
+        <h3 class="mb-5 pb-3 border-b border-[rgb(var(--color-border))] text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--color-muted))]">
           Darbo laikas
         </h3>
-        <dl class="grid gap-2.5">
+        <dl class="grid gap-3">
           {openingHours.map((row) => (
-            <div class="grid grid-cols-[1fr_auto] gap-4 text-base leading-snug">
-              <dt class="text-[rgb(var(--color-text))]">{row.day}</dt>
-              <dd class="font-semibold text-[rgb(var(--color-muted))]">{row.hours}</dd>
+            <div class="grid grid-cols-[1fr_auto] gap-4 text-[0.9375rem] leading-snug">
+              <dt class="text-[rgb(var(--color-text))]/80">{row.day}</dt>
+              <dd class="font-semibold text-[rgb(var(--color-text))]">{row.hours}</dd>
             </div>
           ))}
         </dl>

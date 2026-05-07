@@ -1,4 +1,5 @@
 ---
+import Icon from "@/components/ui/Icon.astro";
 import { agency } from "@/data/agency";
 
 const ksMark = agency.name
@@ -38,8 +39,9 @@ const ksMark = agency.name
     Paruošė <strong class="font-bold text-white">{agency.name}</strong>
   </span>
 
-  <span class="text-sm font-semibold text-[rgb(var(--ks-gold))] group-hover:text-[rgb(var(--ks-gold-hover))] md:mt-0.5">
-    {agency.ctaLabel} <span aria-hidden="true">→</span>
+  <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[rgb(var(--ks-gold))] group-hover:text-[rgb(var(--ks-gold-hover))] md:mt-0.5">
+    {agency.ctaLabel}
+    <Icon name="arrow-right" size={14} strokeWidth={2} class="transition-transform group-hover:translate-x-0.5" />
   </span>
 </a>
 

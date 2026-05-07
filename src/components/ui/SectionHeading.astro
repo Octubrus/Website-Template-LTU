@@ -35,8 +35,8 @@ const eyebrowColor =
 
 const titleColor = tone === "inverse" ? "text-white" : "text-[rgb(var(--color-text))]";
 const subColor =
-  tone === "inverse" ? "text-white/70" : "text-[rgb(var(--color-muted))]";
-const dimColor = tone === "inverse" ? "text-white/35" : "text-[rgb(var(--color-text))]/40";
+  tone === "inverse" ? "text-white/80" : "text-[rgb(var(--color-text))]/72";
+const dimColor = tone === "inverse" ? "text-white/55" : "text-[rgb(var(--color-text))]/55";
 ---
 
 <header class={`mb-12 md:mb-16 ${alignClasses} ${className}`} data-reveal>
@@ -60,7 +60,7 @@ const dimColor = tone === "inverse" ? "text-white/35" : "text-[rgb(var(--color-t
   </h2>
   {subheading && (
     <p
-      class={`mt-5 text-lg leading-relaxed max-w-[60ch] ${subColor} ${align === "center" ? "mx-auto" : ""}`}
+      class={`mt-5 text-lg md:text-xl leading-[1.55] max-w-[60ch] ${subColor} ${align === "center" ? "mx-auto" : ""}`}
     >
       {subheading}
     </p>

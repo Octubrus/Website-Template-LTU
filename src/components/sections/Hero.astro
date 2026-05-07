@@ -1,6 +1,7 @@
 ---
 import Button from "@/components/ui/Button.astro";
 import ImagePlaceholder from "@/components/ui/ImagePlaceholder.astro";
+import Icon from "@/components/ui/Icon.astro";
 import type { Cta } from "@/data/business";
 import type { TrustPoint } from "@/data/pages/home";
 
@@ -35,17 +36,17 @@ const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
 
 <section class="bg-[rgb(var(--color-bg))] py-16 md:py-24 lg:py-28">
   <div class="mx-auto w-full max-w-[1180px] px-5 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-20 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-12 lg:gap-16 xl:gap-20 items-center">
       <div data-reveal>
         {eyebrow && (
           <span class="inline-block mb-5 text-xs font-bold uppercase tracking-[0.18em] text-[rgb(var(--color-accent))]">
             {eyebrow}
           </span>
         )}
-        <h1 class="mb-5 text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.04] tracking-[-0.03em] text-balance max-w-[18ch]">
+        <h1 class="mb-6 text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] xl:text-7xl font-bold leading-[1.04] tracking-[-0.03em] text-balance max-w-[26ch] lg:max-w-[22ch] xl:max-w-[20ch]">
           {headline}
         </h1>
-        <p class="mb-10 text-lg leading-relaxed text-[rgb(var(--color-muted))] max-w-[52ch]">
+        <p class="mb-10 text-lg md:text-xl leading-[1.55] text-[rgb(var(--color-text))]/75 max-w-[58ch]">
           {subheadline}
         </p>
 
@@ -74,11 +75,13 @@ const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
                 data-reveal
                 style={`--reveal-delay: ${250 + i * 80}ms`}
               >
-                {p.icon && (
+                {p.icon === "✓" || p.icon === "check" ? (
+                  <Icon name="check" size={18} strokeWidth={2.2} class="text-[rgb(var(--color-accent))]" />
+                ) : p.icon ? (
                   <span class="text-[rgb(var(--color-accent))] font-bold text-lg leading-none" aria-hidden="true">
                     {p.icon}
                   </span>
-                )}
+                ) : null}
                 <span>{p.text}</span>
               </li>
             ))}

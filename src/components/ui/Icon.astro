@@ -1,0 +1,113 @@
+---
+/**
+ * Local icon system. Outline-only SVGs sharing one stroke width and
+ * sizing API. Uses currentColor so it inherits text color.
+ *
+ * Add new icons sparingly — keep this small. Do not pull in icon
+ * libraries; the starter must stay lean.
+ *
+ * Usage:
+ *   <Icon name="phone" />
+ *   <Icon name="check" size={20} class="text-[rgb(var(--color-accent))]" />
+ */
+
+type IconName =
+  | "phone"
+  | "mail"
+  | "map-pin"
+  | "facebook"
+  | "clock"
+  | "check"
+  | "menu"
+  | "x"
+  | "arrow-right";
+
+interface Props {
+  name: IconName;
+  size?: number;
+  strokeWidth?: number;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  name,
+  size = 20,
+  strokeWidth = 1.75,
+  class: className = "",
+  ariaLabel,
+} = Astro.props;
+
+const ariaProps: Record<string, string> = ariaLabel
+  ? { role: "img", "aria-label": ariaLabel }
+  : { "aria-hidden": "true" };
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={`inline-block shrink-0 ${className}`}
+  {...ariaProps}
+>
+  {name === "phone" && (
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+  )}
+
+  {name === "mail" && (
+    <>
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+      <path d="m3.5 6.5 8.5 6.5L20.5 6.5" />
+    </>
+  )}
+
+  {name === "map-pin" && (
+    <>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </>
+  )}
+
+  {name === "facebook" && (
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  )}
+
+  {name === "clock" && (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </>
+  )}
+
+  {name === "check" && (
+    <path d="m4.5 12.5 5 5 10-11" />
+  )}
+
+  {name === "menu" && (
+    <>
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="17" x2="20" y2="17" />
+    </>
+  )}
+
+  {name === "x" && (
+    <>
+      <line x1="6" y1="6" x2="18" y2="18" />
+      <line x1="18" y1="6" x2="6" y2="18" />
+    </>
+  )}
+
+  {name === "arrow-right" && (
+    <>
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <polyline points="14 6 20 12 14 18" />
+    </>
+  )}
+</svg>
