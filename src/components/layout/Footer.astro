@@ -32,58 +32,68 @@ const {
 
 const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
 const year = new Date().getFullYear();
-const agencyHostname = agency.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
+const agencyHostname = agency.website
+  .replace(/^https?:\/\//, "")
+  .replace(/\/$/, "");
 const ksMark = agency.name
   .split(/\s+/)
   .map((word) => word.charAt(0))
   .slice(0, 2)
   .join("")
   .toUpperCase();
+
+const colHeading =
+  "mb-4 text-sm font-bold uppercase tracking-[0.05em] text-[rgb(var(--color-text))]";
+const colLink =
+  "text-base text-[rgb(var(--color-text))] hover:text-[rgb(var(--color-accent))] transition-colors";
 ---
 
-<footer class="site-footer">
+<footer class="bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text))] border-t border-[rgb(var(--color-border))] pt-16 pb-6">
   <Container>
-    <div class="site-footer__grid">
-      <div class="site-footer__brand">
+    <div class="grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr] gap-10 md:gap-12">
+      <div>
         <Logo
           businessName={businessName}
           logoPath={logoPath}
           logoAlt={logoAlt}
           size="md"
         />
-        <p class="site-footer__desc">{shortDescription}</p>
+        <p class="mt-4 max-w-[42ch] text-[rgb(var(--color-muted))] leading-relaxed">
+          {shortDescription}
+        </p>
       </div>
 
-      <nav class="site-footer__nav" aria-label="Apatinis meniu">
-        <h3 class="site-footer__heading">Naršymas</h3>
-        <ul>
+      <nav aria-label="Apatinis meniu">
+        <h3 class={colHeading}>Naršymas</h3>
+        <ul class="flex flex-col gap-2.5">
           {navItems.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} class={colLink}>{item.label}</a>
             </li>
           ))}
         </ul>
       </nav>
 
-      <div class="site-footer__contact">
-        <h3 class="site-footer__heading">Kontaktai</h3>
-        <ul>
+      <div>
+        <h3 class={colHeading}>Kontaktai</h3>
+        <ul class="flex flex-col gap-2.5">
           {phone && (
-            <li>
-              <a href={telHref}>{phone}</a>
-            </li>
+            <li><a href={telHref} class={colLink}>{phone}</a></li>
           )}
           {email && (
-            <li>
-              <a href={`mailto:${email}`}>{email}</a>
-            </li>
+            <li><a href={`mailto:${email}`} class={colLink}>{email}</a></li>
           )}
-          {address && <li>{address}</li>}
+          {address && (
+            <li class="text-base text-[rgb(var(--color-muted))]">{address}</li>
+          )}
           {facebookUrl && (
             <li>
-              <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-                Facebook
-              </a>
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={colLink}
+              >Facebook</a>
             </li>
           )}
         </ul>
@@ -92,181 +102,45 @@ const ksMark = agency.name
 
     {demoMode && (
       <aside
-        class="footer-demo-credit"
-        data-reveal="fade"
+        class="mt-10 grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] items-start md:items-center gap-x-6 gap-y-4 p-6 md:px-8 rounded-2xl bg-[rgb(var(--ks-navy))] text-[rgb(var(--ks-cream))] border border-[rgb(var(--ks-gold))]/25 leading-relaxed"
+        data-reveal
         aria-label={`Demonstracinę svetainę paruošė ${agency.name}`}
       >
-        <span class="footer-demo-credit__badge" aria-hidden="true">{ksMark}</span>
-        <div class="footer-demo-credit__content">
-          <p class="footer-demo-credit__lead">
-            Demonstracinę svetainę paruošė
+        <span
+          class="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[rgb(var(--ks-gold))] text-[rgb(var(--ks-navy))] font-extrabold text-base tracking-[0.04em] shrink-0"
+          aria-hidden="true"
+        >
+          {ksMark}
+        </span>
+        <div class="col-start-2 md:col-auto">
+          <p class="font-semibold text-[rgb(var(--ks-white))] mb-1">
+            Demonstracinę svetainę paruošė {" "}
             <a
               href={agency.website}
               target="_blank"
               rel="noopener noreferrer"
-            >{agency.name}</a>.
+              class="font-bold text-[rgb(var(--ks-gold))] hover:text-[rgb(var(--ks-gold-hover))] hover:underline"
+            >
+              {agency.name}
+            </a>.
           </p>
-          <p class="footer-demo-credit__desc">{agency.description}</p>
+          <p class="text-sm leading-relaxed text-[rgb(var(--ks-muted))] max-w-[60ch]">
+            {agency.description}
+          </p>
         </div>
         <a
-          class="footer-demo-credit__link"
           href={agency.website}
           target="_blank"
           rel="noopener noreferrer"
+          class="col-span-full md:col-auto justify-self-start text-sm font-bold text-[rgb(var(--ks-gold))] hover:text-[rgb(var(--ks-gold-hover))] hover:underline whitespace-nowrap"
         >
           {agencyHostname} <span aria-hidden="true">→</span>
         </a>
       </aside>
     )}
 
-    <div class="site-footer__bottom">
+    <div class="mt-10 pt-4 border-t border-[rgb(var(--color-border))] text-sm text-[rgb(var(--color-muted))]">
       <p>© {year} {businessName}. Visos teisės saugomos.</p>
     </div>
   </Container>
 </footer>
-
-<style>
-  .site-footer {
-    background-color: var(--color-bg-alt);
-    color: var(--color-text);
-    padding-block: var(--spacing-2xl) var(--spacing-lg);
-    border-top: 1px solid var(--color-border);
-    font-size: var(--font-size-base);
-  }
-
-  .site-footer__grid {
-    display: grid;
-    gap: var(--spacing-xl);
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 768px) {
-    .site-footer__grid {
-      grid-template-columns: 1.6fr 1fr 1fr;
-      gap: var(--spacing-2xl);
-    }
-  }
-
-  .site-footer__desc {
-    margin-top: var(--spacing-md);
-    color: var(--color-text-muted);
-    max-width: 42ch;
-    line-height: 1.6;
-  }
-
-  .site-footer__heading {
-    font-size: var(--font-size-sm);
-    font-weight: 700;
-    margin-bottom: var(--spacing-md);
-    color: var(--color-text);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .site-footer ul {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    line-height: 1.5;
-  }
-  .site-footer ul a,
-  .site-footer ul li {
-    color: var(--color-text);
-    font-size: var(--font-size-base);
-  }
-  .site-footer ul a:hover { color: var(--color-primary); }
-
-  /* ─────────────────────────────────────────────────────────────────
-     Klientų Sistema demo credit — branded card
-     Uses --ks-* tokens. Distinct from the rest of the (neutral) footer.
-     ───────────────────────────────────────────────────────────────── */
-  .footer-demo-credit {
-    margin-top: var(--spacing-xl);
-    padding: var(--spacing-lg);
-    background-color: var(--ks-navy);
-    color: var(--ks-cream);
-    border: 1px solid rgba(201, 151, 85, 0.25);
-    border-radius: var(--radius-lg);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--spacing-md) var(--spacing-lg);
-    align-items: start;
-    font-size: var(--font-size-base);
-    line-height: 1.55;
-  }
-  @media (min-width: 768px) {
-    .footer-demo-credit {
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      padding: var(--spacing-lg) var(--spacing-xl);
-      gap: var(--spacing-xl);
-    }
-  }
-
-  .footer-demo-credit__badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-md);
-    background-color: var(--ks-gold);
-    color: var(--ks-navy);
-    font-weight: 800;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
-  }
-
-  .footer-demo-credit__content {
-    grid-column: 2;
-    color: var(--ks-cream);
-  }
-  @media (min-width: 768px) {
-    .footer-demo-credit__content { grid-column: auto; }
-  }
-  .footer-demo-credit__lead {
-    color: var(--ks-white);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .footer-demo-credit__lead a {
-    color: var(--ks-gold);
-    font-weight: 700;
-    text-decoration: none;
-    transition: color var(--motion-duration-fast) var(--motion-ease);
-  }
-  .footer-demo-credit__lead a:hover {
-    color: var(--ks-gold-hover);
-    text-decoration: underline;
-  }
-  .footer-demo-credit__desc {
-    color: var(--ks-muted);
-    font-size: var(--font-size-sm);
-    line-height: 1.55;
-    max-width: 60ch;
-  }
-
-  .footer-demo-credit__link {
-    grid-column: 1 / -1;
-    color: var(--ks-gold);
-    font-weight: 700;
-    font-size: var(--font-size-sm);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color var(--motion-duration-fast) var(--motion-ease);
-  }
-  @media (min-width: 768px) {
-    .footer-demo-credit__link { grid-column: auto; }
-  }
-  .footer-demo-credit__link:hover {
-    color: var(--ks-gold-hover);
-    text-decoration: underline;
-  }
-
-  .site-footer__bottom {
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-md);
-    border-top: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
-  }
-</style>

@@ -11,53 +11,26 @@ interface Props {
 const { eyebrow, heading, dimLine, subheading } = Astro.props;
 ---
 
-<Section bg="alt">
-  <div class="page-header" data-reveal>
-    {eyebrow && <span class="page-header__eyebrow">{eyebrow}</span>}
-    <h1 class="page-header__heading">
+<Section bg="alt" spacing="md">
+  <div class="max-w-[800px] mx-auto text-center" data-reveal>
+    {eyebrow && (
+      <span class="inline-block mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[rgb(var(--color-accent))]">
+        {eyebrow}
+      </span>
+    )}
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-balance">
       <span>{heading}</span>
       {dimLine && (
         <>
           {" "}
-          <span class="page-header__heading-dim">{dimLine}</span>
+          <span class="text-[rgb(var(--color-text))]/40">{dimLine}</span>
         </>
       )}
     </h1>
-    {subheading && <p class="page-header__sub">{subheading}</p>}
+    {subheading && (
+      <p class="mt-5 text-lg leading-relaxed text-[rgb(var(--color-muted))] max-w-[60ch] mx-auto">
+        {subheading}
+      </p>
+    )}
   </div>
 </Section>
-
-<style>
-  .page-header {
-    text-align: center;
-    max-width: 800px;
-    margin-inline: auto;
-  }
-  .page-header__eyebrow {
-    display: inline-block;
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    margin-bottom: var(--spacing-md);
-  }
-  .page-header__heading {
-    font-size: clamp(2.25rem, 4.8vw, var(--font-size-4xl));
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tighter);
-    font-weight: 600;
-    margin-bottom: var(--spacing-md);
-    text-wrap: balance;
-  }
-  .page-header__heading-dim {
-    color: var(--color-text-dim);
-  }
-  .page-header__sub {
-    font-size: var(--font-size-md);
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    max-width: 60ch;
-    margin-inline: auto;
-  }
-</style>

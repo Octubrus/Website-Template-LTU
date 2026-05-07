@@ -34,10 +34,11 @@ import CTASection from "@/components/sections/CTASection.astro";
   </Section>
 
   <Section bg="alt">
-    <div class="map-wrap">
+    <div class="max-w-[880px] mx-auto max-h-[460px]">
       <ImagePlaceholder
         label={contactPage.mapPlaceholderLabel}
         aspectRatio="16/9"
+        class="max-h-[460px]"
       />
     </div>
   </Section>
@@ -62,17 +63,3 @@ import CTASection from "@/components/sections/CTASection.astro";
     primaryCta={contactPage.cta.primaryCta}
   />
 </BaseLayout>
-
-<style>
-  .map-wrap {
-    max-width: 880px;
-    margin-inline: auto;
-    /* Cap the placeholder height so 16/9 doesn't dominate the page.
-       When a real iframe/image replaces ImagePlaceholder, this still
-       behaves naturally. */
-    max-height: 460px;
-  }
-  .map-wrap :global(.image-placeholder) {
-    max-height: 460px;
-  }
-</style>

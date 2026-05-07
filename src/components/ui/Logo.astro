@@ -17,41 +17,34 @@ const {
   class: className = "",
 } = Astro.props;
 
-const classes = ["logo", `logo--${size}`, className].filter(Boolean).join(" ");
-const altText = logoAlt && logoAlt.trim().length > 0 ? logoAlt : `${businessName} logotipas`;
+const altText =
+  logoAlt && logoAlt.trim().length > 0 ? logoAlt : `${businessName} logotipas`;
+
+const imgSizes = {
+  sm: "h-7",
+  md: "h-9",
+  lg: "h-12",
+} as const;
+
+const textSizes = {
+  sm: "text-base",
+  md: "text-lg",
+  lg: "text-xl",
+} as const;
 ---
 
-<a href={href} class={classes} aria-label={`${businessName} — pradžios puslapis`}>
+<a
+  href={href}
+  class={`inline-flex items-center text-[rgb(var(--color-text))] no-underline hover:no-underline ${className}`}
+  aria-label={`${businessName} — pradžios puslapis`}
+>
   {logoPath ? (
-    <img src={logoPath} alt={altText} class="logo__img" />
+    <img src={logoPath} alt={altText} class={`block w-auto ${imgSizes[size]}`} />
   ) : (
-    <span class="logo__text">{businessName}</span>
+    <span
+      class={`font-bold tracking-tight text-[rgb(var(--color-text))] ${textSizes[size]}`}
+    >
+      {businessName}
+    </span>
   )}
 </a>
-
-<style>
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--color-text);
-  }
-  .logo:hover { text-decoration: none; }
-
-  .logo__img {
-    display: block;
-    width: auto;
-  }
-  .logo--sm .logo__img { height: 28px; }
-  .logo--md .logo__img { height: 36px; }
-  .logo--lg .logo__img { height: 48px; }
-
-  .logo__text {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--color-text);
-  }
-  .logo--sm .logo__text { font-size: var(--font-size-base); }
-  .logo--md .logo__text { font-size: var(--font-size-lg); }
-  .logo--lg .logo__text { font-size: var(--font-size-xl); }
-</style>

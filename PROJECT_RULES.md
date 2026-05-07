@@ -18,7 +18,7 @@ This is a starter template for **fast local business demo websites** — used to
 ## Rules
 
 ### 1. Every client demo must look different
-Restyle `src/styles/tokens.css` for every prospect. Pick a color and feel that fits **their** business — calm and clinical, warm and friendly, energetic, etc. The default tokens are deliberately neutral; do not ship them as-is.
+Restyle the CSS variables at the top of `src/styles/global.css` for every prospect. The single most important variable is `--color-accent` — it drives every CTA, link, eyebrow, and active state across the site. Pick a color and feel that fits **their** business — calm and clinical, warm and friendly, energetic, etc. The default tokens (deep navy on warm cream) are deliberately neutral; do not ship them as-is.
 
 ### 2. No stock photos. Ever.
 Use only images the client has actually provided (logo, real photos of the business, real team, real interior). If no images exist, use `ImagePlaceholder.astro` with instructional copy. A clean placeholder is more honest and more persuasive than a stock photo.
@@ -30,7 +30,13 @@ No fake testimonials, no fake stats, no fake awards, no fake team members, no fa
 `demoMode: true` and `allowIndexing: false` are the safe defaults. Only flip them once the client has approved the site and it is ready to go live on its real domain.
 
 ### 5. Lean codebase
-Do not add npm packages without a clear justification. Do not add Tailwind, React, Vue, animation libraries, sliders, counters, or popup libraries. Astro + plain CSS + small inline JS is enough for V1.
+The styling system is **Tailwind CSS v4** (via `@tailwindcss/vite`) plus a small set of CSS variables in `global.css` for brand tokens. That's it. Do not add: React, Vue, Tailwind UI, shadcn, component libraries, animation libraries (Framer Motion, GSAP), sliders, counter scripts, or popup libraries. Reveal animations are handled by a tiny inline JS observer + a CSS class — no library needed.
+
+Tailwind class usage rules:
+- Write utilities directly in markup; keep them readable.
+- For prop-based variants (Button, Section, FeatureGrid, CTASection, etc.) use **explicit static class maps**, never construct class names by string interpolation (`bg-${color}` will not be discovered by Tailwind).
+- Do not invent abstract design-system layers. If a pattern repeats 3–4 times, that's still fine to keep inline.
+- Avoid `@apply`. Brand-specific values come from `rgb(var(--color-accent))` arbitrary utilities so a single CSS-variable change re-themes the site.
 
 ### 6. Components must stay flexible
 Do not create industry-specific components like `GymServices`, `DentalTreatments`, or `KindergartenPrograms`. Use the existing flexible primitives — `FeatureGrid`, `SplitContent`, `CTASection`, `ContactBlock`, `TrustPoints`, `FAQ` — and re-label them via data files.

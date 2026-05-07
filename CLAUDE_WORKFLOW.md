@@ -52,16 +52,28 @@ If the hero still looks like the default after customization, you haven't custom
 
 In `src/pages/index.astro`, `paslaugos.astro`, `kontaktai.astro`: **delete sections** that don't add value for this specific prospect. An empty FAQ or weak trust points block hurts the demo more than it helps.
 
-## Step 5 — Restyle tokens
+## Step 5 — Restyle brand tokens
 
-`src/styles/tokens.css` — change `--color-primary`, `--color-bg`, `--color-bg-alt`, font tokens if needed. Pick colors that fit the business:
+`src/styles/global.css` — change the CSS variables at the top of the file. The minimum to swap per business:
+
+```css
+--color-accent: <RGB triplet>;       /* main CTA / link / eyebrow color */
+--color-accent-dark: <RGB triplet>;  /* CTA hover */
+--color-bg: <RGB triplet>;           /* page background */
+--color-surface-alt: <RGB triplet>;  /* alt section background */
+--color-dark: <RGB triplet>;         /* dark CTA section background */
+```
+
+Values are RGB triplets (e.g. `41 132 158`) so Tailwind arbitrary utilities like `bg-[rgb(var(--color-accent))]` resolve correctly across every component.
+
+Pick colors that fit the business:
 - Clinic / dental: cool blue or muted teal
 - Beauty / spa: warm neutral or muted rose
-- Gym: bold dark + accent
+- Gym: bold dark + saturated accent
 - Kindergarten: warm friendly tone
 - Service business: trustworthy navy or green
 
-Do **not** ship the default colors as-is.
+Do **not** ship the default deep-navy as-is. Tweak Tailwind classes inline in components only when a business needs structural changes (different hero proportions, different section rhythm) — for color and spacing, the variables above carry most of the work.
 
 ## Step 6 — Add real assets
 

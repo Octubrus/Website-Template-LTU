@@ -5,6 +5,7 @@ interface Props {
   id?: string;
   class?: string;
   bg?: "default" | "alt" | "dark" | "primary";
+  spacing?: "sm" | "md" | "lg";
   contained?: boolean;
 }
 
@@ -12,15 +13,33 @@ const {
   id,
   class: className = "",
   bg = "default",
+  spacing = "md",
   contained = true,
 } = Astro.props;
 
-const classes = ["section", `section--${bg}`, className]
-  .filter(Boolean)
-  .join(" ");
+const bgClasses = {
+  default: "bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]",
+  alt: "bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text))]",
+  dark: "bg-[rgb(var(--color-dark))] text-white",
+  primary: "bg-[rgb(var(--color-accent))] text-white",
+} as const;
+
+const spacingClasses = {
+  sm: "py-14 md:py-20",
+  md: "py-20 md:py-28",
+  lg: "py-24 md:py-36",
+} as const;
+
+const classes = `${bgClasses[bg]} ${spacingClasses[spacing]} ${className}`.trim();
+
+// Subtle radial glow for dark sections — adds premium depth without animation.
+const darkBgStyle =
+  bg === "dark"
+    ? "background-image: radial-gradient(ellipse at 20% 0%, rgb(var(--color-dark-soft)) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgb(var(--color-dark-soft) / 0.6) 0%, transparent 55%);"
+    : undefined;
 ---
 
-<section id={id} class={classes}>
+<section id={id} class={classes} style={darkBgStyle}>
   {contained ? (
     <Container>
       <slot />
@@ -29,29 +48,3 @@ const classes = ["section", `section--${bg}`, className]
     <slot />
   )}
 </section>
-
-<style>
-  .section {
-    padding-block: var(--section-padding-y);
-  }
-  .section--default { background-color: var(--color-bg); }
-  .section--alt { background-color: var(--color-bg-alt); }
-  .section--dark {
-    background-color: var(--color-bg-dark);
-    color: var(--color-text-inverse);
-  }
-  .section--dark :global(h1),
-  .section--dark :global(h2),
-  .section--dark :global(h3) {
-    color: var(--color-text-inverse);
-  }
-  .section--primary {
-    background-color: var(--color-primary);
-    color: var(--color-primary-contrast);
-  }
-  .section--primary :global(h1),
-  .section--primary :global(h2),
-  .section--primary :global(h3) {
-    color: var(--color-primary-contrast);
-  }
-</style>

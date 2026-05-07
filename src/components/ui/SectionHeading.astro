@@ -3,9 +3,8 @@ interface Props {
   eyebrow?: string;
   heading: string;
   /**
-   * Optional dimmed second line — same size as the main heading,
-   * rendered with reduced opacity. Used selectively to add visual
-   * hierarchy without a second colour.
+   * Optional second heading line at the same size, rendered with reduced
+   * opacity (~40%). Use selectively, not in every section.
    */
   dimLine?: string;
   subheading?: string;
@@ -24,86 +23,46 @@ const {
   class: className = "",
 } = Astro.props;
 
-const classes = [
-  "section-heading",
-  `section-heading--${align}`,
-  `section-heading--${tone}`,
-  className,
-]
-  .filter(Boolean)
-  .join(" ");
+const alignClasses =
+  align === "center"
+    ? "max-w-[760px] mx-auto text-center"
+    : "max-w-[760px] text-left";
+
+const eyebrowColor =
+  tone === "inverse"
+    ? "text-white/85"
+    : "text-[rgb(var(--color-accent))]";
+
+const titleColor = tone === "inverse" ? "text-white" : "text-[rgb(var(--color-text))]";
+const subColor =
+  tone === "inverse" ? "text-white/70" : "text-[rgb(var(--color-muted))]";
+const dimColor = tone === "inverse" ? "text-white/35" : "text-[rgb(var(--color-text))]/40";
 ---
 
-<header class={classes} data-reveal>
-  {eyebrow && <span class="section-heading__eyebrow">{eyebrow}</span>}
-  <h2 class="section-heading__title">
-    <span class="section-heading__line">{heading}</span>
+<header class={`mb-12 md:mb-16 ${alignClasses} ${className}`} data-reveal>
+  {eyebrow && (
+    <span
+      class={`inline-block mb-4 text-xs font-bold uppercase tracking-[0.18em] ${eyebrowColor}`}
+    >
+      {eyebrow}
+    </span>
+  )}
+  <h2
+    class={`text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-balance ${titleColor}`}
+  >
+    <span>{heading}</span>
     {dimLine && (
       <>
         {" "}
-        <span class="section-heading__line section-heading__line--dim">
-          {dimLine}
-        </span>
+        <span class={dimColor}>{dimLine}</span>
       </>
     )}
   </h2>
-  {subheading && <p class="section-heading__sub">{subheading}</p>}
+  {subheading && (
+    <p
+      class={`mt-5 text-lg leading-relaxed max-w-[60ch] ${subColor} ${align === "center" ? "mx-auto" : ""}`}
+    >
+      {subheading}
+    </p>
+  )}
 </header>
-
-<style>
-  .section-heading {
-    max-width: 760px;
-    margin-inline: auto;
-    margin-bottom: var(--spacing-2xl);
-  }
-  .section-heading--center { text-align: center; }
-  .section-heading--start { text-align: left; margin-inline: 0; }
-
-  .section-heading__eyebrow {
-    display: inline-block;
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-label);
-    margin-bottom: var(--spacing-md);
-  }
-  .section-heading--inverse .section-heading__eyebrow {
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .section-heading__title {
-    font-size: clamp(2rem, 4.4vw, var(--font-size-4xl));
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tighter);
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0;
-    text-wrap: balance;
-  }
-  .section-heading--inverse .section-heading__title {
-    color: var(--color-text-inverse);
-  }
-
-  .section-heading__line { display: inline; }
-  .section-heading__line--dim {
-    color: var(--color-text-dim);
-  }
-  .section-heading--inverse .section-heading__line--dim {
-    color: var(--color-text-dim-on-dark);
-  }
-
-  .section-heading__sub {
-    font-size: var(--font-size-md);
-    color: var(--color-text-muted);
-    line-height: 1.55;
-    margin-top: var(--spacing-md);
-    max-width: 60ch;
-  }
-  .section-heading--center .section-heading__sub {
-    margin-inline: auto;
-  }
-  .section-heading--inverse .section-heading__sub {
-    color: rgba(255, 255, 255, 0.7);
-  }
-</style>

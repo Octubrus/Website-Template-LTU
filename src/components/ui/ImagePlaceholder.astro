@@ -13,56 +13,19 @@ const {
 ---
 
 <div
-  class={`image-placeholder ${className}`}
+  class={`relative w-full overflow-hidden rounded-2xl border border-[rgb(var(--color-border))] bg-gradient-to-br from-[rgb(var(--color-surface-alt))] to-[rgb(var(--color-bg))] flex items-center justify-center px-6 py-12 ${className}`}
   style={`aspect-ratio: ${aspectRatio};`}
   role="img"
   aria-label={label}
 >
-  <div class="image-placeholder__inner">
-    <span class="image-placeholder__title">Nuotraukos vieta</span>
-    <span class="image-placeholder__hint">{label}</span>
+  <div
+    class="absolute inset-3 rounded-[14px] border border-dashed border-[rgb(var(--color-border-strong))] opacity-60 pointer-events-none"
+    aria-hidden="true"
+  ></div>
+  <div class="relative max-w-[360px] text-center text-[rgb(var(--color-muted))]">
+    <span class="block mb-1 font-semibold text-[rgb(var(--color-text))]">
+      Nuotraukos vieta
+    </span>
+    <span class="block text-sm leading-snug">{label}</span>
   </div>
 </div>
-
-<style>
-  .image-placeholder {
-    width: 100%;
-    background:
-      linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-2xl) var(--spacing-lg);
-    overflow: hidden;
-    position: relative;
-  }
-  .image-placeholder::before {
-    content: "";
-    position: absolute;
-    inset: var(--spacing-md);
-    border: 1px dashed var(--color-border-strong);
-    border-radius: calc(var(--radius-lg) - var(--spacing-sm));
-    pointer-events: none;
-    opacity: 0.55;
-  }
-  .image-placeholder__inner {
-    text-align: center;
-    max-width: 360px;
-    color: var(--color-text-muted);
-    position: relative;
-  }
-  .image-placeholder__title {
-    display: block;
-    font-weight: 600;
-    color: var(--color-text);
-    font-size: var(--font-size-base);
-    margin-bottom: var(--spacing-xs);
-  }
-  .image-placeholder__hint {
-    display: block;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-snug);
-  }
-</style>

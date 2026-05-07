@@ -11,54 +11,29 @@ const { href, label, secondaryLabel } = Astro.props;
 {href && (
   <a
     href={href}
-    class="sticky-cta"
+    class="sticky-cta fixed bottom-0 left-0 right-0 z-[800] flex md:hidden items-center justify-center gap-2 px-4 bg-[rgb(var(--color-accent))] text-white font-semibold no-underline shadow-[0_-4px_16px_rgb(0_0_0/0.1)] transition-[opacity,visibility,background-color] duration-200 hover:bg-[rgb(var(--color-accent-dark))]"
+    style="height: var(--mobile-cta-height, 56px);"
     aria-label={secondaryLabel ? `${label} - ${secondaryLabel}` : label}
   >
-    <span class="sticky-cta__icon" aria-hidden="true">
+    <span class="inline-flex items-center" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
       </svg>
     </span>
-    <span class="sticky-cta__label">{label}</span>
-    {secondaryLabel && <span class="sticky-cta__phone">{secondaryLabel}</span>}
+    <span class="text-base">{label}</span>
+    {secondaryLabel && (
+      <span class="text-sm opacity-90">{secondaryLabel}</span>
+    )}
   </a>
 )}
 
 <style>
-  .sticky-cta {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 800;
-    height: var(--mobile-cta-height);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    background-color: var(--color-primary);
-    color: var(--color-primary-contrast);
-    font-weight: 600;
-    text-decoration: none;
-    padding-inline: var(--spacing-md);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+  /* Provide --mobile-cta-height for DemoWidget's bottom offset. */
+  :global(:root) {
+    --mobile-cta-height: 56px;
   }
-  .sticky-cta:hover { text-decoration: none; }
-  .sticky-cta__icon {
-    display: inline-flex;
-    align-items: center;
-  }
-  .sticky-cta__label {
-    font-size: var(--font-size-base);
-  }
-  .sticky-cta__phone {
-    font-size: var(--font-size-sm);
-    opacity: 0.92;
-  }
-
+  /* Reserve bottom space on mobile so content isn't hidden under the CTA. */
   @media (max-width: 767px) {
-    .sticky-cta { display: flex; }
-    /* Reserve space at the bottom of the page so footer content isn't hidden under the CTA. */
     :global(body) {
       padding-bottom: var(--mobile-cta-height);
     }

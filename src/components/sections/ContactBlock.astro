@@ -32,9 +32,26 @@ const {
 
 const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
 const hasContactCards = Boolean(phone || email || address || facebookUrl);
+
+const cardClasses =
+  "flex flex-col gap-1.5 p-5 md:p-6 rounded-2xl bg-white border border-[rgb(var(--color-border))] transition-colors hover:border-[rgb(var(--color-border-strong))]";
+const iconClasses =
+  "inline-flex items-center justify-center w-10 h-10 mb-1 rounded-full bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-accent))] text-base font-bold leading-none";
+const labelClasses =
+  "text-xs font-semibold uppercase tracking-[0.05em] text-[rgb(var(--color-muted))]";
+const valueClasses =
+  "text-lg font-semibold leading-snug text-[rgb(var(--color-accent))] hover:underline";
+
+const layoutClasses = compact
+  ? "grid grid-cols-1 gap-6"
+  : "grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 lg:gap-12 items-start";
+
+const cardsGridClasses = compact
+  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+  : "grid grid-cols-1 sm:grid-cols-2 gap-4";
 ---
 
-<div class={`contact-block ${compact ? "contact-block--compact" : ""}`}>
+<div class="max-w-[1040px] mx-auto">
   {heading && (
     <SectionHeading
       eyebrow={eyebrow}
@@ -44,39 +61,32 @@ const hasContactCards = Boolean(phone || email || address || facebookUrl);
     />
   )}
 
-  <div class="contact-block__layout">
+  <div class={layoutClasses}>
     {hasContactCards && (
-      <ul class="contact-block__cards">
+      <ul class={cardsGridClasses}>
         {phone && (
-          <li class="contact-block__card" data-reveal style="--reveal-delay: 0ms">
-            <span class="contact-block__icon" aria-hidden="true">📞</span>
-            <span class="contact-block__label">Telefonas</span>
-            <a class="contact-block__value contact-block__value--link" href={telHref}>
-              {phone}
-            </a>
+          <li class={cardClasses} data-reveal style="--reveal-delay: 0ms">
+            <span class={iconClasses} aria-hidden="true">📞</span>
+            <span class={labelClasses}>Telefonas</span>
+            <a class={valueClasses} href={telHref}>{phone}</a>
           </li>
         )}
 
         {email && (
-          <li class="contact-block__card" data-reveal style="--reveal-delay: 80ms">
-            <span class="contact-block__icon" aria-hidden="true">✉</span>
-            <span class="contact-block__label">El. paštas</span>
-            <a
-              class="contact-block__value contact-block__value--link"
-              href={`mailto:${email}`}
-            >
-              {email}
-            </a>
+          <li class={cardClasses} data-reveal style="--reveal-delay: 80ms">
+            <span class={iconClasses} aria-hidden="true">✉</span>
+            <span class={labelClasses}>El. paštas</span>
+            <a class={valueClasses} href={`mailto:${email}`}>{email}</a>
           </li>
         )}
 
         {address && (
-          <li class="contact-block__card" data-reveal style="--reveal-delay: 160ms">
-            <span class="contact-block__icon" aria-hidden="true">📍</span>
-            <span class="contact-block__label">Adresas</span>
+          <li class={cardClasses} data-reveal style="--reveal-delay: 160ms">
+            <span class={iconClasses} aria-hidden="true">📍</span>
+            <span class={labelClasses}>Adresas</span>
             {mapsUrl ? (
               <a
-                class="contact-block__value contact-block__value--link"
+                class={valueClasses}
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -84,17 +94,19 @@ const hasContactCards = Boolean(phone || email || address || facebookUrl);
                 {address}
               </a>
             ) : (
-              <span class="contact-block__value">{address}</span>
+              <span class="text-lg font-semibold leading-snug text-[rgb(var(--color-text))]">
+                {address}
+              </span>
             )}
           </li>
         )}
 
         {facebookUrl && (
-          <li class="contact-block__card" data-reveal style="--reveal-delay: 240ms">
-            <span class="contact-block__icon" aria-hidden="true">f</span>
-            <span class="contact-block__label">Facebook</span>
+          <li class={cardClasses} data-reveal style="--reveal-delay: 240ms">
+            <span class={iconClasses} aria-hidden="true">f</span>
+            <span class={labelClasses}>Facebook</span>
             <a
-              class="contact-block__value contact-block__value--link"
+              class={valueClasses}
               href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -107,13 +119,19 @@ const hasContactCards = Boolean(phone || email || address || facebookUrl);
     )}
 
     {!compact && openingHours && openingHours.length > 0 && (
-      <div class="contact-block__hours" data-reveal style="--reveal-delay: 100ms">
-        <h3 class="contact-block__hours-heading">Darbo laikas</h3>
-        <dl class="contact-block__hours-list">
+      <div
+        class="rounded-2xl bg-white border border-[rgb(var(--color-border))] p-6"
+        data-reveal
+        style="--reveal-delay: 100ms"
+      >
+        <h3 class="mb-4 pb-3 border-b border-[rgb(var(--color-border))] text-base font-bold tracking-tight">
+          Darbo laikas
+        </h3>
+        <dl class="grid gap-2.5">
           {openingHours.map((row) => (
-            <div class="contact-block__hours-row">
-              <dt>{row.day}</dt>
-              <dd>{row.hours}</dd>
+            <div class="grid grid-cols-[1fr_auto] gap-4 text-base leading-snug">
+              <dt class="text-[rgb(var(--color-text))]">{row.day}</dt>
+              <dd class="font-semibold text-[rgb(var(--color-muted))]">{row.hours}</dd>
             </div>
           ))}
         </dl>
@@ -121,124 +139,3 @@ const hasContactCards = Boolean(phone || email || address || facebookUrl);
     )}
   </div>
 </div>
-
-<style>
-  .contact-block {
-    max-width: 1040px;
-    margin-inline: auto;
-  }
-
-  .contact-block__layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
-  }
-  @media (min-width: 900px) {
-    .contact-block__layout {
-      grid-template-columns: 1.5fr 1fr;
-      gap: var(--spacing-2xl);
-      align-items: start;
-    }
-  }
-  .contact-block--compact .contact-block__layout {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-block__cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-  }
-  @media (min-width: 600px) {
-    .contact-block__cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  .contact-block--compact .contact-block__cards {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 600px) {
-    .contact-block--compact .contact-block__cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 900px) {
-    .contact-block--compact .contact-block__cards {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .contact-block__card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: var(--spacing-lg) var(--spacing-lg);
-    background-color: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    transition: border-color 0.15s ease;
-  }
-  .contact-block__card:hover {
-    border-color: var(--color-border-strong);
-  }
-
-  .contact-block__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-md);
-    background-color: var(--color-info-bg);
-    color: var(--color-primary);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .contact-block__label {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  .contact-block__value {
-    font-size: var(--font-size-md);
-    color: var(--color-text);
-    font-weight: 600;
-    line-height: 1.4;
-  }
-  .contact-block__value--link {
-    color: var(--color-primary);
-  }
-  .contact-block__value--link:hover {
-    text-decoration: underline;
-  }
-
-  .contact-block__hours {
-    background-color: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-  }
-  .contact-block__hours-heading {
-    font-size: var(--font-size-base);
-    font-weight: 700;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--color-border);
-  }
-  .contact-block__hours-list {
-    display: grid;
-    gap: var(--spacing-sm);
-  }
-  .contact-block__hours-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-base);
-    line-height: 1.5;
-  }
-  .contact-block__hours-row dt { color: var(--color-text); }
-  .contact-block__hours-row dd { color: var(--color-text-muted); font-weight: 600; }
-</style>
