@@ -17,8 +17,6 @@ interface Props {
 
 const { heading, subtext, primaryCta, bg = "dark", dimLine, eyebrow } =
   Astro.props;
-
-const isInverse = bg === "primary" || bg === "dark";
 ---
 
 <section class={`cta-section-wrap cta-section-wrap--${bg}`}>

@@ -15,6 +15,10 @@ interface Props {
 const { title, description } = Astro.props;
 
 const noIndex = business.demoMode || !business.allowIndexing;
+const mobileCtaSecondaryLabel =
+  business.mobileCta.href.startsWith("tel:") && business.phone
+    ? business.phone
+    : undefined;
 ---
 
 <!doctype html>
@@ -71,7 +75,11 @@ const noIndex = business.demoMode || !business.allowIndexing;
     />
 
     {business.demoMode && <DemoWidget />}
-    <StickyMobileCTA phone={business.phone} label={business.primaryCta.label} />
+    <StickyMobileCTA
+      href={business.mobileCta.href}
+      label={business.mobileCta.label}
+      secondaryLabel={mobileCtaSecondaryLabel}
+    />
 
     <script>
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

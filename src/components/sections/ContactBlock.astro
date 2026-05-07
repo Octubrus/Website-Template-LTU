@@ -3,9 +3,9 @@ import SectionHeading from "@/components/ui/SectionHeading.astro";
 import type { OpeningHours } from "@/data/business";
 
 interface Props {
-  phone: string;
-  email: string;
-  address: string;
+  phone?: string;
+  email?: string;
+  address?: string;
   mapsUrl?: string;
   facebookUrl?: string;
   openingHours?: OpeningHours[];
@@ -31,6 +31,7 @@ const {
 } = Astro.props;
 
 const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
+const hasContactCards = Boolean(phone || email || address || facebookUrl);
 ---
 
 <div class={`contact-block ${compact ? "contact-block--compact" : ""}`}>
@@ -44,58 +45,66 @@ const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
   )}
 
   <div class="contact-block__layout">
-    <ul class="contact-block__cards">
-      <li class="contact-block__card" data-reveal style="--reveal-delay: 0ms">
-        <span class="contact-block__icon" aria-hidden="true">📞</span>
-        <span class="contact-block__label">Telefonas</span>
-        <a class="contact-block__value contact-block__value--link" href={telHref}>
-          {phone}
-        </a>
-      </li>
-
-      <li class="contact-block__card" data-reveal style="--reveal-delay: 80ms">
-        <span class="contact-block__icon" aria-hidden="true">✉</span>
-        <span class="contact-block__label">El. paštas</span>
-        <a
-          class="contact-block__value contact-block__value--link"
-          href={`mailto:${email}`}
-        >
-          {email}
-        </a>
-      </li>
-
-      <li class="contact-block__card" data-reveal style="--reveal-delay: 160ms">
-        <span class="contact-block__icon" aria-hidden="true">📍</span>
-        <span class="contact-block__label">Adresas</span>
-        {mapsUrl ? (
-          <a
-            class="contact-block__value contact-block__value--link"
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {address}
-          </a>
-        ) : (
-          <span class="contact-block__value">{address}</span>
+    {hasContactCards && (
+      <ul class="contact-block__cards">
+        {phone && (
+          <li class="contact-block__card" data-reveal style="--reveal-delay: 0ms">
+            <span class="contact-block__icon" aria-hidden="true">📞</span>
+            <span class="contact-block__label">Telefonas</span>
+            <a class="contact-block__value contact-block__value--link" href={telHref}>
+              {phone}
+            </a>
+          </li>
         )}
-      </li>
 
-      {facebookUrl && (
-        <li class="contact-block__card" data-reveal style="--reveal-delay: 240ms">
-          <span class="contact-block__icon" aria-hidden="true">f</span>
-          <span class="contact-block__label">Facebook</span>
-          <a
-            class="contact-block__value contact-block__value--link"
-            href={facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Sekti puslapį
-          </a>
-        </li>
-      )}
-    </ul>
+        {email && (
+          <li class="contact-block__card" data-reveal style="--reveal-delay: 80ms">
+            <span class="contact-block__icon" aria-hidden="true">✉</span>
+            <span class="contact-block__label">El. paštas</span>
+            <a
+              class="contact-block__value contact-block__value--link"
+              href={`mailto:${email}`}
+            >
+              {email}
+            </a>
+          </li>
+        )}
+
+        {address && (
+          <li class="contact-block__card" data-reveal style="--reveal-delay: 160ms">
+            <span class="contact-block__icon" aria-hidden="true">📍</span>
+            <span class="contact-block__label">Adresas</span>
+            {mapsUrl ? (
+              <a
+                class="contact-block__value contact-block__value--link"
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {address}
+              </a>
+            ) : (
+              <span class="contact-block__value">{address}</span>
+            )}
+          </li>
+        )}
+
+        {facebookUrl && (
+          <li class="contact-block__card" data-reveal style="--reveal-delay: 240ms">
+            <span class="contact-block__icon" aria-hidden="true">f</span>
+            <span class="contact-block__label">Facebook</span>
+            <a
+              class="contact-block__value contact-block__value--link"
+              href={facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Sekti puslapį
+            </a>
+          </li>
+        )}
+      </ul>
+    )}
 
     {!compact && openingHours && openingHours.length > 0 && (
       <div class="contact-block__hours" data-reveal style="--reveal-delay: 100ms">

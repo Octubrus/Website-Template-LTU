@@ -21,6 +21,7 @@ export interface BusinessConfig {
   facebookUrl: string;
   primaryCta: Cta;
   secondaryCta: Cta;
+  mobileCta: Cta;
   demoMode: boolean;
   allowIndexing: boolean;
   openingHours: OpeningHours[];
@@ -47,6 +48,7 @@ export const business: BusinessConfig = {
   facebookUrl: "https://facebook.com/",
   primaryCta: { label: "Susisiekti", href: "/kontaktai" },
   secondaryCta: { label: "Paslaugos", href: "/paslaugos" },
+  mobileCta: { label: "Skambinti", href: "tel:+37060000000" },
   demoMode: true,
   allowIndexing: false,
   openingHours: [

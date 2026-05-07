@@ -28,9 +28,7 @@ const pricingItems = servicesPage.pricing.cards.map((c) => ({
 
   <Section>
     <FeatureGrid
-      eyebrow={servicesPage.services.eyebrow}
       heading={servicesPage.services.heading}
-      dimLine={servicesPage.services.dimLine}
       items={servicesPage.services.items}
       columns={2}
       cardStyle="bordered"
@@ -42,7 +40,6 @@ const pricingItems = servicesPage.pricing.cards.map((c) => ({
       <FeatureGrid
         eyebrow={servicesPage.pricing.eyebrow}
         heading={servicesPage.pricing.heading}
-        dimLine={servicesPage.pricing.dimLine}
         subheading={servicesPage.pricing.subheading}
         items={pricingItems}
         columns={3}
@@ -55,7 +52,6 @@ const pricingItems = servicesPage.pricing.cards.map((c) => ({
     <FAQ
       eyebrow={servicesPage.faq.eyebrow}
       heading={servicesPage.faq.heading}
-      dimLine={servicesPage.faq.dimLine}
       items={servicesPage.faq.items}
     />
   </Section>
