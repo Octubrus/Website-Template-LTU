@@ -76,50 +76,101 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
         <span class="site-header__toggle-bar"></span>
       </button>
     </div>
-
-    <div
-      id="mobile-menu"
-      class="mobile-menu"
-      aria-hidden="true"
-      data-mobile-menu
-    >
-      <ul class="mobile-menu__list">
-        {navItems.map((item) => {
-          const itemPath = item.href.replace(/\/$/, "") || "/";
-          const isActive = itemPath === currentPath;
-          return (
-            <li>
-              <a
-                href={item.href}
-                class={`mobile-menu__link ${isActive ? "is-active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          );
-        })}
-        {phone && (
-          <li>
-            <a href={telHref} class="mobile-menu__link mobile-menu__link--phone">
-              <span aria-hidden="true">📞</span> {phone}
-            </a>
-          </li>
-        )}
-        <li class="mobile-menu__cta">
-          <Button href={primaryCta.href} variant="primary">
-            {primaryCta.label}
-          </Button>
-        </li>
-      </ul>
-    </div>
   </Container>
 </header>
 
+<div
+  id="mobile-menu"
+  class="mobile-menu"
+  aria-hidden="true"
+  data-mobile-menu
+  role="dialog"
+  aria-modal="true"
+  aria-label="Pagrindinis meniu"
+>
+    <div class="mobile-menu__bar">
+      <Container>
+        <div class="mobile-menu__bar-inner">
+          <Logo
+            businessName={businessName}
+            logoPath={logoPath}
+            logoAlt={logoAlt}
+            size="md"
+          />
+          <button
+            type="button"
+            class="mobile-menu__close"
+            aria-label="Užverti meniu"
+            data-menu-close
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </Container>
+    </div>
+
+    <Container>
+      <div class="mobile-menu__body">
+        <nav aria-label="Mobiliojo įrenginio meniu">
+          <ul class="mobile-menu__list">
+            {navItems.map((item) => {
+              const itemPath = item.href.replace(/\/$/, "") || "/";
+              const isActive = itemPath === currentPath;
+              return (
+                <li>
+                  <a
+                    href={item.href}
+                    class={`mobile-menu__link ${isActive ? "is-active" : ""}`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div class="mobile-menu__footer">
+          {phone && (
+            <a href={telHref} class="mobile-menu__phone">
+              <span class="mobile-menu__phone-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
+                </svg>
+              </span>
+              <span>{phone}</span>
+            </a>
+          )}
+          <Button href={primaryCta.href} variant="primary">
+            {primaryCta.label}
+          </Button>
+        </div>
+      </div>
+    </Container>
+</div>
+
 <script>
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const closeBtn = document.querySelector<HTMLButtonElement>("[data-menu-close]");
   const menu = document.querySelector<HTMLDivElement>("[data-mobile-menu]");
   const header = document.querySelector<HTMLElement>("[data-header]");
+  const body = document.body;
+
+  let lastFocused: HTMLElement | null = null;
 
   function setMenuOpen(open: boolean) {
     if (!toggle || !menu || !header) return;
@@ -127,12 +178,28 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     toggle.setAttribute("aria-label", open ? "Užverti meniu" : "Atidaryti meniu");
     menu.setAttribute("aria-hidden", String(!open));
     header.classList.toggle("is-menu-open", open);
+    body.classList.toggle("is-menu-open", open);
+
+    if (open) {
+      lastFocused = document.activeElement as HTMLElement;
+      // Focus the close button for keyboard users
+      requestAnimationFrame(() => closeBtn?.focus());
+    } else {
+      // Return focus to the toggle when closing
+      if (lastFocused && lastFocused !== document.body) {
+        lastFocused.focus();
+      } else {
+        toggle.focus();
+      }
+    }
   }
 
   toggle?.addEventListener("click", () => {
     const isOpen = toggle.getAttribute("aria-expanded") === "true";
     setMenuOpen(!isOpen);
   });
+
+  closeBtn?.addEventListener("click", () => setMenuOpen(false));
 
   // Close menu after clicking a link
   menu?.querySelectorAll("a").forEach((link) => {
@@ -141,7 +208,9 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
   // Close on Esc
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") setMenuOpen(false);
+    if (e.key === "Escape" && header?.classList.contains("is-menu-open")) {
+      setMenuOpen(false);
+    }
   });
 
   // Reset state if user resizes back to desktop
@@ -149,6 +218,47 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   desktopMq.addEventListener("change", (ev) => {
     if (ev.matches) setMenuOpen(false);
   });
+
+  // ─────────────────────────────────────────────────────────────────
+  // Mobile-only: hide header on scroll down, reveal on scroll up.
+  // Disabled in capture mode and while the mobile menu is open.
+  // ─────────────────────────────────────────────────────────────────
+  const mobileMq = window.matchMedia("(max-width: 767px)");
+  const SCROLL_THRESHOLD = 8; // px delta before reacting (anti-flicker)
+  const TOP_OFFSET = 16; // always show near top
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      if (!header) return;
+      if (!mobileMq.matches) {
+        header.classList.remove("site-header--hidden");
+        lastScrollY = window.scrollY;
+        return;
+      }
+      if (body.classList.contains("capture-mode")) return;
+      if (header.classList.contains("is-menu-open")) return;
+
+      const y = window.scrollY;
+      const delta = y - lastScrollY;
+
+      if (y <= TOP_OFFSET) {
+        header.classList.remove("site-header--hidden");
+      } else if (delta > SCROLL_THRESHOLD) {
+        header.classList.add("site-header--hidden");
+      } else if (delta < -SCROLL_THRESHOLD) {
+        header.classList.remove("site-header--hidden");
+      }
+
+      lastScrollY = y;
+    });
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
 </script>
 
 <style>
@@ -158,12 +268,18 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     z-index: 700;
     background-color: var(--color-white);
     border-bottom: 1px solid var(--color-border);
+    transition: transform 220ms var(--motion-ease);
+  }
+  /* Mobile: hide on scroll-down */
+  .site-header--hidden {
+    transform: translateY(-100%);
   }
   /* Capture mode: header is static so full-page screenshots don't show
      the sticky bar overlapping the middle of the page. Toggle via
      business.ts -> captureMode: true. */
   :global(body.capture-mode) .site-header {
     position: static;
+    transform: none !important;
   }
 
   .site-header__inner {
@@ -189,6 +305,14 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 0;
+    cursor: pointer;
+    transition: border-color var(--motion-duration-fast) var(--motion-ease),
+                background-color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .site-header__toggle:hover,
+  .site-header__toggle:focus-visible {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-bg-alt);
   }
   .site-header__toggle-bar {
     display: block;
@@ -198,55 +322,170 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     border-radius: 2px;
     transition: transform 0.2s ease, opacity 0.2s ease;
   }
-  .site-header.is-menu-open .site-header__toggle-bar:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
-  .site-header.is-menu-open .site-header__toggle-bar:nth-child(2) {
+  /* Hamburger no longer morphs into an X — the overlay has its own close button */
+
+  /* ─────────────────────────────────────────────────────────────────
+     Mobile overlay menu
+     ───────────────────────────────────────────────────────────────── */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
     opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 220ms var(--motion-ease),
+                transform 220ms var(--motion-ease),
+                visibility 0s linear 220ms;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
-  .site-header.is-menu-open .site-header__toggle-bar:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+  :global(body.is-menu-open) .mobile-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 220ms var(--motion-ease),
+                transform 220ms var(--motion-ease),
+                visibility 0s linear 0s;
   }
 
-  .mobile-menu {
-    display: none;
-    padding-block: var(--spacing-md) var(--spacing-lg);
-    border-top: 1px solid var(--color-border);
+  .mobile-menu__bar {
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-white);
   }
-  .site-header.is-menu-open .mobile-menu {
-    display: block;
+  .mobile-menu__bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: var(--spacing-md);
   }
+  .mobile-menu__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    padding: 0;
+    cursor: pointer;
+    transition: border-color var(--motion-duration-fast) var(--motion-ease),
+                background-color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .mobile-menu__close:hover,
+  .mobile-menu__close:focus-visible {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-bg-alt);
+  }
+
+  .mobile-menu__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-top: var(--spacing-2xl);
+    padding-bottom: var(--spacing-xl);
+    gap: var(--spacing-2xl);
+  }
+
   .mobile-menu__list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
   .mobile-menu__link {
     display: block;
-    padding: 0.7rem 0.5rem;
-    font-size: var(--font-size-lg);
-    font-weight: 500;
+    padding: 0.85rem 0;
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
     color: var(--color-text);
-    border-radius: var(--radius-sm);
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--motion-duration-fast) var(--motion-ease);
   }
-  .mobile-menu__link:hover { text-decoration: none; background-color: var(--color-bg-alt); }
+  .mobile-menu__link:hover,
+  .mobile-menu__link:focus-visible {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  .mobile-menu__link:active {
+    color: var(--color-primary-dark);
+  }
   .mobile-menu__link.is-active {
     color: var(--color-primary);
-    font-weight: 600;
   }
-  .mobile-menu__link--phone {
+
+  .mobile-menu__footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+  }
+  .mobile-menu__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    padding: 0.5rem 0;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .mobile-menu__phone:hover,
+  .mobile-menu__phone:focus-visible {
     color: var(--color-primary);
-    font-weight: 600;
+    text-decoration: none;
   }
-  .mobile-menu__cta {
-    margin-top: var(--spacing-sm);
+  .mobile-menu__phone-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-alt);
+    color: var(--color-primary);
   }
-  .mobile-menu__cta :global(.btn) { width: 100%; }
+  .mobile-menu__footer :global(.btn) {
+    width: 100%;
+    justify-content: center;
+    padding-block: 0.95rem;
+    font-size: var(--font-size-md);
+  }
+
+  /* Hide DemoWidget and StickyMobileCTA while menu is open */
+  :global(body.is-menu-open) :global(.demo-widget),
+  :global(body.is-menu-open) :global(.sticky-cta) {
+    visibility: hidden;
+  }
+  /* Lock body scroll while menu is open */
+  :global(body.is-menu-open) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .mobile-menu {
+      transition: none;
+    }
+  }
 
   @media (min-width: 768px) {
     .site-header__inner { height: 80px; }
     .site-header__toggle { display: none; }
     .mobile-menu { display: none !important; }
+    /* Desktop never hides the header */
+    .site-header--hidden { transform: none; }
 
     .site-header__nav { display: block; }
     .site-header__nav-list {
