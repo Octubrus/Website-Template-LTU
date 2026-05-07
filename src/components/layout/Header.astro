@@ -124,19 +124,22 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
     <Container>
       <div class="mobile-menu__body">
-        <nav aria-label="Mobiliojo įrenginio meniu">
+        <nav class="mobile-menu__nav" aria-label="Mobiliojo įrenginio meniu">
+          <p class="mobile-menu__eyebrow" aria-hidden="true">Naršymas</p>
           <ul class="mobile-menu__list">
-            {navItems.map((item) => {
+            {navItems.map((item, index) => {
               const itemPath = item.href.replace(/\/$/, "") || "/";
               const isActive = itemPath === currentPath;
+              const num = String(index + 1).padStart(2, "0");
               return (
-                <li>
+                <li class="mobile-menu__item" style={`--stagger:${index * 40}ms`}>
                   <a
                     href={item.href}
                     class={`mobile-menu__link ${isActive ? "is-active" : ""}`}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    {item.label}
+                    <span class="mobile-menu__num" aria-hidden="true">{num}</span>
+                    <span class="mobile-menu__label">{item.label}</span>
                   </a>
                 </li>
               );
@@ -144,16 +147,12 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           </ul>
         </nav>
 
-        <div class="mobile-menu__footer">
+        <div class="mobile-menu__contact">
           {phone && (
-            <a href={telHref} class="mobile-menu__phone">
-              <span class="mobile-menu__phone-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
-                </svg>
-              </span>
-              <span>{phone}</span>
-            </a>
+            <div class="mobile-menu__contact-row">
+              <p class="mobile-menu__contact-label">Turite klausimų?</p>
+              <a href={telHref} class="mobile-menu__phone">{phone}</a>
+            </div>
           )}
           <Button href={primaryCta.href} variant="primary">
             {primaryCta.label}
@@ -325,20 +324,21 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   /* Hamburger no longer morphs into an X — the overlay has its own close button */
 
   /* ─────────────────────────────────────────────────────────────────
-     Mobile overlay menu
+     Mobile overlay menu — full-screen, editorial styling.
+     All values driven by tokens in styles/tokens.css so it can be
+     re-skinned per client without touching this component.
      ───────────────────────────────────────────────────────────────── */
   .mobile-menu {
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background-color: var(--color-white);
+    background-color: var(--color-bg);
+    color: var(--color-text);
     display: flex;
     flex-direction: column;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-8px);
     transition: opacity 220ms var(--motion-ease),
-                transform 220ms var(--motion-ease),
                 visibility 0s linear 220ms;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -346,15 +346,12 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   :global(body.is-menu-open) .mobile-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     transition: opacity 220ms var(--motion-ease),
-                transform 220ms var(--motion-ease),
                 visibility 0s linear 0s;
   }
 
   .mobile-menu__bar {
-    border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-white);
+    background-color: var(--color-bg);
   }
   .mobile-menu__bar-inner {
     display: flex;
@@ -364,102 +361,171 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     gap: var(--spacing-md);
   }
   .mobile-menu__close {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
     background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
     color: var(--color-text);
     padding: 0;
     cursor: pointer;
     transition: border-color var(--motion-duration-fast) var(--motion-ease),
-                background-color var(--motion-duration-fast) var(--motion-ease);
+                background-color var(--motion-duration-fast) var(--motion-ease),
+                color var(--motion-duration-fast) var(--motion-ease);
   }
   .mobile-menu__close:hover,
   .mobile-menu__close:focus-visible {
-    border-color: var(--color-border-strong);
-    background-color: var(--color-bg-alt);
+    border-color: var(--color-text);
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    outline: none;
+  }
+  .mobile-menu__close:active {
+    transform: scale(0.97);
   }
 
   .mobile-menu__body {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding-top: var(--spacing-2xl);
+    padding-top: var(--spacing-xl);
     padding-bottom: var(--spacing-xl);
     gap: var(--spacing-2xl);
+  }
+
+  .mobile-menu__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  .mobile-menu__eyebrow {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .mobile-menu__list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
     list-style: none;
     margin: 0;
     padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .mobile-menu__item {
+    border-bottom: 1px solid var(--color-border);
+    /* Slide/fade-in stagger when menu opens */
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  :global(body.is-menu-open) .mobile-menu__item {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 240ms var(--motion-ease) var(--stagger, 0ms),
+                transform 240ms var(--motion-ease) var(--stagger, 0ms);
   }
   .mobile-menu__link {
-    display: block;
-    padding: 0.85rem 0;
-    font-size: var(--font-size-2xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-tight);
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-md);
+    padding: 1.15rem 0;
     color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
     transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .mobile-menu__num {
+    flex-shrink: 0;
+    width: 1.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+  .mobile-menu__label {
+    font-size: clamp(1.875rem, 8.5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
   }
   .mobile-menu__link:hover,
   .mobile-menu__link:focus-visible {
     color: var(--color-primary);
     text-decoration: none;
+    outline: none;
   }
-  .mobile-menu__link:active {
-    color: var(--color-primary-dark);
+  .mobile-menu__link:hover .mobile-menu__num,
+  .mobile-menu__link:focus-visible .mobile-menu__num {
+    color: var(--color-primary);
   }
   .mobile-menu__link.is-active {
     color: var(--color-primary);
   }
+  .mobile-menu__link.is-active .mobile-menu__num {
+    color: var(--color-primary);
+  }
+  /* Subtle accent rule on the active item (sits over the bottom border) */
+  .mobile-menu__link.is-active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 32px;
+    height: 2px;
+    background-color: var(--color-primary);
+    border-radius: 1px;
+  }
 
-  .mobile-menu__footer {
+  .mobile-menu__contact {
     margin-top: auto;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+  .mobile-menu__contact-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mobile-menu__contact-label {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
   .mobile-menu__phone {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--color-text);
-    font-size: var(--font-size-md);
-    font-weight: 600;
-    padding: 0.5rem 0;
+    display: inline-block;
+    color: var(--color-primary);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.2;
     transition: color var(--motion-duration-fast) var(--motion-ease);
   }
   .mobile-menu__phone:hover,
   .mobile-menu__phone:focus-visible {
-    color: var(--color-primary);
+    color: var(--color-primary-dark);
     text-decoration: none;
   }
-  .mobile-menu__phone-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-alt);
-    color: var(--color-primary);
-  }
-  .mobile-menu__footer :global(.btn) {
+  .mobile-menu__contact :global(.btn) {
     width: 100%;
     justify-content: center;
-    padding-block: 0.95rem;
+    padding-block: 1rem;
     font-size: var(--font-size-md);
   }
 
@@ -475,8 +541,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
   @media (prefers-reduced-motion: reduce) {
     .site-header,
-    .mobile-menu {
-      transition: none;
+    .mobile-menu,
+    .mobile-menu__item {
+      transition: none !important;
+    }
+    .mobile-menu__item {
+      opacity: 1;
+      transform: none;
     }
   }
 
