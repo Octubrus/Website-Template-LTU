@@ -118,18 +118,13 @@ body.is-menu-open .sticky-cta {
   pointer-events: none;
 }
 
-/* Mobile menu open state — toggled via body class. */
+/* Mobile menu open state — toggled via body class.
+   Per-item stagger and contact-card reveal live in Header.astro. */
 body.is-menu-open [data-mobile-menu] {
   opacity: 1;
   visibility: visible;
   transition: opacity 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
               visibility 0s linear 0s;
-}
-body.is-menu-open [data-mobile-menu] [data-menu-item] {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 240ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--stagger, 0ms),
-              transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--stagger, 0ms);
 }
 
 /* Header scroll-hide — toggled by header script. */
